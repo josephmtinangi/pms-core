@@ -31,4 +31,7 @@ Route::group(['middleware' => 'jwt.refresh'], function(){
 
 Route::group(['middleware' => 'jwt.auth'], function(){
    Route::post('auth/logout', 'AuthController@logout');
+   Route::resource('regions', 'Api\RegionsController');
+   
+   Route::resource('properties', 'Api\PropertiesController');
 });
