@@ -15,4 +15,9 @@ class Property extends Model
     {
     	return $this->belongsTo(Client::class);
     }
+
+    public function village()
+    {
+    	return $this->belongsTo(Village::class);
+    }
 }

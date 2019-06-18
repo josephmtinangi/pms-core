@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Property;
+use App\Models\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class PropertiesController extends Controller
+class ClientsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,11 +15,11 @@ class PropertiesController extends Controller
      */
     public function index()
     {
-        $properties = Property::with(['propertyType', 'client', 'village'])->get();
+        $clients = Client::with('clientType')->get();
 
         return response([
             'status' => 'success',
-            'data' => $properties,
+            'data' => $clients,
         ], 200);
     }
 
@@ -41,17 +41,23 @@ class PropertiesController extends Controller
      */
     public function store(Request $request)
     {
-        $property = new Property;
-        $property->name = $request->name;
-        $property->property_type_id = $request->property_type_id;
-        $property->client_id = $request->client_id;
-        $property->physical_address = $request->physical_address;
-        $property->village_id = $request->village_id;
-        $property->save();
+        $client = new Client;
+        $client->first_name = $request->first_name;
+        $client->middle_name = $request->middle_name;
+        $client->last_name = $request->last_name;
+        $client->client_type_id = $request->client_type_id;
+        $client->phone = $request->phone;
+        $client->photo = $request->photo;
+        $client->email = $request->email;
+        $client->physical_address = $request->physical_address;
+        $client->postal_address = $request->postal_address;
+        $client->tin = $request->tin;
+
+        $client->save();
 
         return response([
             'status' => 'success',
-            'data' => $property,
+            'data' => $client,
         ], 200);
     }
 

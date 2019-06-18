@@ -15,7 +15,7 @@ class RegionsController extends Controller
      */
     public function index()
     {
-        $regions = Region::get();
+        $regions = Region::with('districts')->get();
 
         return response([
             'status' => 'success',

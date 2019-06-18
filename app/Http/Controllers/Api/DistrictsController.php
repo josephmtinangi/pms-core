@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Property;
+use App\Models\District;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class PropertiesController extends Controller
+class DistrictsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,11 +15,11 @@ class PropertiesController extends Controller
      */
     public function index()
     {
-        $properties = Property::with(['propertyType', 'client', 'village'])->get();
+        $districts = District::with('region')->get();
 
         return response([
             'status' => 'success',
-            'data' => $properties,
+            'data' => $districts,
         ], 200);
     }
 
@@ -41,17 +41,14 @@ class PropertiesController extends Controller
      */
     public function store(Request $request)
     {
-        $property = new Property;
-        $property->name = $request->name;
-        $property->property_type_id = $request->property_type_id;
-        $property->client_id = $request->client_id;
-        $property->physical_address = $request->physical_address;
-        $property->village_id = $request->village_id;
-        $property->save();
+        $district = new District;
+        $district->name = $request->name;
+        $district->region_id = $request->region_id;
+        $district->save();
 
         return response([
             'status' => 'success',
-            'data' => $property,
+            'data' => $district,
         ], 200);
     }
 

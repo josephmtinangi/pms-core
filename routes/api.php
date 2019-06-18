@@ -30,8 +30,20 @@ Route::group(['middleware' => 'jwt.refresh'], function(){
 });
 
 Route::group(['middleware' => 'jwt.auth'], function(){
-   Route::post('auth/logout', 'AuthController@logout');
-   Route::resource('regions', 'Api\RegionsController');
    
+   Route::post('auth/logout', 'AuthController@logout');
+   
+   Route::resource('regions', 'Api\RegionsController');
+   Route::resource('districts', 'Api\DistrictsController');
+   Route::resource('wards', 'Api\WardsController');
+   Route::resource('villages', 'Api\VillagesController');
+   
+   Route::resource('client-types', 'Api\ClientTypesController');
+   Route::resource('clients', 'Api\ClientsController');
+   
+   Route::resource('property-types', 'Api\PropertyTypesController');
    Route::resource('properties', 'Api\PropertiesController');
+   
+   Route::resource('customer-types', 'Api\CustomerTypesController');
+   Route::resource('customers', 'Api\CustomersController');
 });

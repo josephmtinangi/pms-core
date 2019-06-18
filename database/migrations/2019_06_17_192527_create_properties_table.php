@@ -18,10 +18,13 @@ class CreatePropertiesTable extends Migration
             $table->string('name');
             $table->unsignedInteger('property_type_id');
             $table->unsignedInteger('client_id');
+            $table->string('physical_address');
+            $table->unsignedInteger('village_id');
             $table->timestamps();
 
             $table->foreign('property_type_id')->references('id')->on('property_types');
             $table->foreign('client_id')->references('id')->on('clients');
+            $table->foreign('village_id')->references('id')->on('villages');
         });
     }
 

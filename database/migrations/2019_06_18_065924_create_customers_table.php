@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateClientsTable extends Migration
+class CreateCustomersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,20 @@ class CreateClientsTable extends Migration
      */
     public function up()
     {
-        Schema::create('clients', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->unsignedInteger('client_type_id');
             $table->string('phone')->unique();
-            $table->string('photo')->nullable();
             $table->string('email')->unique()->nullable();
-            $table->string('physical_address')->nullable();
-            $table->string('postal_address')->nullable();
+            $table->unsignedInteger('customer_type_id');
+            $table->string('physical_address');
+            $table->string('postal_address');
             $table->string('tin')->unique()->nullable();
             $table->timestamps();
 
-            $table->foreign('client_type_id')->references('id')->on('client_types');
+            $table->foreign('customer_type_id')->references('id')->on('customer_types');
         });
     }
 
@@ -38,6 +37,6 @@ class CreateClientsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('clients');
+        Schema::dropIfExists('customers');
     }
 }
