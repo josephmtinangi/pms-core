@@ -24,6 +24,33 @@ class DistrictsController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function wards($id)
+    {
+        $district = District::find($id);
+
+        if(!$district) {
+            return response([
+                'status' => 400,
+                'statusText' => 'error',
+                'message' => 'Not found',
+                'ok' => true,
+                'data' => $district,
+            ], 400);            
+        }
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'ok' => true,
+            'data' => $district->wards,
+        ], 200);
+    }     
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

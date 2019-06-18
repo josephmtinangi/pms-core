@@ -15,10 +15,12 @@ class PropertiesController extends Controller
      */
     public function index()
     {
-        $properties = Property::with(['propertyType', 'client', 'village'])->get();
+        $properties = Property::with(['propertyType', 'client', 'village'])->latest()->paginate(20);
 
         return response([
-            'status' => 'success',
+            'status' => 200,
+            'statusText' => 'success',
+            'ok' => true,
             'data' => $properties,
         ], 200);
     }
@@ -50,7 +52,9 @@ class PropertiesController extends Controller
         $property->save();
 
         return response([
-            'status' => 'success',
+            'status' => 200,
+            'statusText' => 'success',
+            'ok' => true,
             'data' => $property,
         ], 200);
     }

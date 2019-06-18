@@ -15,10 +15,12 @@ class CustomersController extends Controller
      */
     public function index()
     {
-        $customers = Customer::with('customerType')->get();
+        $customers = Customer::with('customerType')->latest()->paginate(20);
 
         return response([
-            'status' => 'success',
+            'status' => 200,
+            'statusText' => 'success',
+            'ok' => true,
             'data' => $customers,
         ], 200);
     }
@@ -54,7 +56,9 @@ class CustomersController extends Controller
         $customer->save();
         
         return response([
-            'status' => 'success',
+            'status' => 200,
+            'statusText' => 'success',
+            'ok' => true,
             'data' => $customer,
         ], 200);
     }

@@ -24,6 +24,33 @@ class WardsController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function villages($id)
+    {
+        $ward = Ward::find($id);
+
+        if(!$ward) {
+            return response([
+                'status' => 400,
+                'statusText' => 'error',
+                'message' => 'Not found',
+                'ok' => true,
+                'data' => $ward,
+            ], 400);            
+        }
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'ok' => true,
+            'data' => $ward->villages,
+        ], 200);
+    }      
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

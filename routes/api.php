@@ -34,11 +34,15 @@ Route::group(['middleware' => 'jwt.auth'], function(){
    Route::post('auth/logout', 'AuthController@logout');
    
    Route::resource('regions', 'Api\RegionsController');
+   Route::get('regions/{region}/districts', 'Api\RegionsController@districts');
    Route::resource('districts', 'Api\DistrictsController');
+   Route::get('districts/{district}/wards', 'Api\DistrictsController@wards');
    Route::resource('wards', 'Api\WardsController');
+   Route::get('wards/{ward}/villages', 'Api\WardsController@villages');
    Route::resource('villages', 'Api\VillagesController');
    
    Route::resource('client-types', 'Api\ClientTypesController');
+   Route::get('clients/all', 'Api\ClientsController@all');
    Route::resource('clients', 'Api\ClientsController');
    
    Route::resource('property-types', 'Api\PropertyTypesController');

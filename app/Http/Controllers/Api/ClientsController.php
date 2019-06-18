@@ -15,7 +15,7 @@ class ClientsController extends Controller
      */
     public function index()
     {
-        $clients = Client::with('clientType')->latest()->get();
+        $clients = Client::with('clientType')->latest()->paginate(20);
 
         return response([
             'status' => 200,
@@ -24,6 +24,23 @@ class ClientsController extends Controller
             'data' => $clients,
         ], 200);
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function all()
+    {
+        $clients = Client::latest()->get();
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'ok' => true,
+            'data' => $clients,
+        ], 200);
+    }    
 
     /**
      * Show the form for creating a new resource.

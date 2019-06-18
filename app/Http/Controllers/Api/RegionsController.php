@@ -15,13 +15,42 @@ class RegionsController extends Controller
      */
     public function index()
     {
-        $regions = Region::with('districts')->get();
+        $regions = Region::get();
 
         return response([
-            'status' => 'success',
+            'status' => 200,
+            'statusText' => 'success',
+            'ok' => true,
             'data' => $regions,
         ], 200);
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function districts($id)
+    {
+        $region = Region::find($id);
+
+        if(!$region) {
+        return response([
+            'status' => 400,
+            'statusText' => 'error',
+            'message' => 'Not found',
+            'ok' => true,
+            'data' => $region,
+        ], 400);            
+        }
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'ok' => true,
+            'data' => $region->districts,
+        ], 200);
+    }    
 
     /**
      * Show the form for creating a new resource.
