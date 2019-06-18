@@ -15,10 +15,12 @@ class ClientsController extends Controller
      */
     public function index()
     {
-        $clients = Client::with('clientType')->get();
+        $clients = Client::with('clientType')->latest()->get();
 
         return response([
-            'status' => 'success',
+            'status' => 200,
+            'statusText' => 'success',
+            'ok' => true,
             'data' => $clients,
         ], 200);
     }
@@ -56,7 +58,9 @@ class ClientsController extends Controller
         $client->save();
 
         return response([
-            'status' => 'success',
+            'status' => 200,
+            'statusText' => 'success',
+            'ok' => true,
             'data' => $client,
         ], 200);
     }

@@ -32,8 +32,9 @@ class AuthController extends Controller
 	    $credentials = $request->only('email', 'password');
 	    if ( ! $token = JWTAuth::attempt($credentials)) {
 	            return response([
-	                'status' => 'error',
-	                'error' => 'invalid.credentials',
+	                'status' => 400,
+	                'statusText' => 'error',
+	                'ok' => false,
 	                'message' => 'Invalid Credentials.'
 	            ], 400);
 	    }
@@ -42,9 +43,13 @@ class AuthController extends Controller
 	    $user->save();
 	    
 	    return response([
+	    			'status' => 200,
+	    			'statusText' => 'success',
+	    			'ok' => true,
+	    			'message' => '',
 	            	'token' => $token,
 	            	'user' => $user,
-		        ]);
+		], 200);
 	}	
 
 	public function user(Request $request)
