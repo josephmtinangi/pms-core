@@ -15,7 +15,7 @@ class PropertiesController extends Controller
      */
     public function index()
     {
-        $properties = Property::with(['propertyType', 'client', 'village'])->latest()->paginate(20);
+        $properties = Property::with(['propertyType', 'client', 'village', 'rooms'])->latest()->paginate(20);
 
         return response([
             'status' => 200,

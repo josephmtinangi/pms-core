@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Room;
+use App\Models\Property;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -104,5 +105,58 @@ class RoomsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function upload(Request $request)
+    {
+        $property = Property::find($request->property_id);
+
+        if(!$property)
+        {
+            return response([
+                'status' => 400,
+                'statusText' => 'error',
+                'ok' => true,
+                'message' => 'Property not found',
+                'data' => null,
+            ], 400);
+        }
+
+        $count = 0;
+
+        if (request()->hasFile('file')) {
+            if (request()->file('file')->isValid()) {
+                
+                $path = $request->file->store('files');
+                $path = storage_path() . '/app/public/' . $path;
+                $rows = \Excel::load($path, function ($reader) {
+
+                })
+                ->get();
+
+                foreach($rows as $key => $row) {
+                    $room = new Room();
+                    $room->number = $row->number;
+                    $room->floor = $row->floor;
+                    $room->metrics = $row->metrics;
+                    $room->size = $row->size;
+                    $room->price_per_sqm = $row->price_per_sqm;
+                    $room->currency = $row->currency;
+                    $room->property_id = $property->id;
+                    $room->save();
+
+                    $count++;
+                }
+            }
+        }
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'ok' => true,
+            'data' => [
+                'rooms' => $count,
+            ],
+        ], 200);        
     }
 }

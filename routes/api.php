@@ -51,5 +51,6 @@ Route::group(['middleware' => 'jwt.auth'], function(){
    Route::resource('customer-types', 'Api\CustomerTypesController');
    Route::resource('customers', 'Api\CustomersController');
    
+   Route::post('rooms/upload', 'Api\RoomsController@upload');
    Route::resource('rooms', 'Api\RoomsController');
 });
