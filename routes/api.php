@@ -33,6 +33,8 @@ Route::group(['middleware' => 'jwt.auth'], function(){
    
    Route::post('auth/logout', 'AuthController@logout');
    
+   Route::get('dashboard', 'Api\DashboardController@index');
+   
    Route::resource('users', 'Api\UsersController');
    
    Route::resource('regions', 'Api\RegionsController');
