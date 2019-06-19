@@ -48,6 +48,7 @@ class PropertiesController extends Controller
         $property->property_type_id = $request->property_type_id;
         $property->client_id = $request->client_id;
         $property->physical_address = $request->physical_address;
+        $property->floors = $request->floors;
         $property->village_id = $request->village_id;
         $property->save();
 
