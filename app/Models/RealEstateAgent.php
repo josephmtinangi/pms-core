@@ -4,15 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class RealEstateAgent extends Model
 {
-    public function clientType()
-    {
-    	return $this->belongsTo(ClientType::class);
-    }
-
     public function accounts()
     {
         return $this->morphMany('App\Models\Account', 'accountable');
-    }       
+    }
 }
