@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Property;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class PropertiesController extends Controller
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,14 +15,14 @@ class PropertiesController extends Controller
      */
     public function index()
     {
-        $properties = Property::with(['propertyType', 'client', 'village', 'rooms'])->latest()->paginate(20);
+        $users = User::latest()->paginate(20);
 
         return response([
             'status' => 200,
             'statusText' => 'success',
             'message' => 'success',
             'ok' => true,
-            'data' => $properties,
+            'data' => $users,
         ], 200);
     }
 
@@ -44,21 +44,7 @@ class PropertiesController extends Controller
      */
     public function store(Request $request)
     {
-        $property = new Property;
-        $property->name = $request->name;
-        $property->property_type_id = $request->property_type_id;
-        $property->client_id = $request->client_id;
-        $property->physical_address = $request->physical_address;
-        $property->floors = $request->floors;
-        $property->village_id = $request->village_id;
-        $property->save();
-
-        return response([
-            'status' => 200,
-            'statusText' => 'success',
-            'ok' => true,
-            'data' => $property,
-        ], 200);
+        //
     }
 
     /**
@@ -67,9 +53,15 @@ class PropertiesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        //
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => 'success',
+            'ok' => true,
+            'data' => $user,
+        ], 200);
     }
 
     /**
