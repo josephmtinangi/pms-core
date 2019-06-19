@@ -50,4 +50,6 @@ Route::group(['middleware' => 'jwt.auth'], function(){
    
    Route::resource('customer-types', 'Api\CustomerTypesController');
    Route::resource('customers', 'Api\CustomersController');
+   
+   Route::resource('rooms', 'Api\RoomsController');
 });
