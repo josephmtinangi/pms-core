@@ -22,7 +22,10 @@ class AuthController extends Controller
 	    $user->save();
 	    
 	    return response([
-	        'status' => 'success',
+	        'status' => 200,
+	        'statusText' => 'success',
+	        'ok' => true,
+	        'message' => '',
 	        'data' => $user
 	    ], 200);
 	}
@@ -47,8 +50,10 @@ class AuthController extends Controller
 	    			'statusText' => 'success',
 	    			'ok' => true,
 	    			'message' => '',
-	            	'token' => $token,
-	            	'user' => $user,
+	    			'data' => [
+		            	'token' => $token,
+		            	'user' => $user,
+	    			]
 		], 200);
 	}	
 
@@ -56,7 +61,10 @@ class AuthController extends Controller
 	{
 	    $user = User::find(Auth::user()->id);
 	    return response([
-	            'status' => 'success',
+	            'status' => 200,
+	            'statusText' => 'success',
+	            'ok' => true,
+	            'message' => '',
 	            'data' => $user
 	        	]);
 	}
@@ -64,7 +72,11 @@ class AuthController extends Controller
 	public function refresh()
 	{
 	    return response([
-	            'status' => 'success'
+	            'status' => 200,
+	            'statusText' => 'success',
+	            'ok' => true,
+	            'message' => '',
+	            'data' => null,
 	        	]);
 	}	
 
@@ -72,8 +84,11 @@ class AuthController extends Controller
 	{
 	    JWTAuth::invalidate();
 	    return response([
-	            'status' => 'success',
-	            'message' => 'Logged out Successfully.'
+	            'status' => 200,
+	            'statusText' => 'success',
+	            'ok' => true,
+	            'message' => 'Logged out Successfully.',
+	            'data' => null,
 	        ], 200);
 	}
 
