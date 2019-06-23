@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use App\Models\RealEstateAgent;
 use App\Http\Controllers\Controller;
 
 class RealEstateAgentsController extends Controller
@@ -14,7 +15,15 @@ class RealEstateAgentsController extends Controller
      */
     public function index()
     {
-        //
+        $realEstateAgents = RealEstateAgent::get();
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => '',
+            'ok' => true,
+            'data' => $realEstateAgents,
+        ], 200);
     }
 
     /**
@@ -35,7 +44,22 @@ class RealEstateAgentsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $realEstateAgent = new RealEstateAgent;
+        $realEstateAgent->name = $request->name;
+        $realEstateAgent->logo = $request->logo;
+        $realEstateAgent->postal_address = $request->postal_address;
+        $realEstateAgent->physical_address = $request->physical_address;
+        $realEstateAgent->phone = $request->phone;
+        $realEstateAgent->email = $request->email;
+        $realEstateAgent->save();
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => '',
+            'ok' => true,
+            'data' => $realEstateAgent,
+        ], 200);        
     }
 
     /**

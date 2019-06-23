@@ -19,6 +19,9 @@ class CreateCustomerContractsTable extends Migration
             $table->unsignedInteger('property_id');
             $table->date('start_date');
             $table->date('end_date');
+            $table->double('rent_per_month');
+            $table->integer('payment_interval')->default(1);
+            $table->integer('contract_duration')->default(1);
             $table->string('contract')->nullable();
             $table->string('control_number')->unique()->nullable();
             $table->timestamps();

@@ -10,4 +10,9 @@ class Customer extends Model
     {
     	return $this->belongsTo(CustomerType::class);
     }
+
+    public function customerContracts()
+    {
+    	return $this->hasMany(CustomerContract::class);
+    }
 }

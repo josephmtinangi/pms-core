@@ -14,3 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+use Carbon\Carbon;
+Route::get('test', function () {
+
+	\Log::info('okay');
+});

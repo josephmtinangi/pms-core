@@ -26,6 +26,19 @@ class PropertiesController extends Controller
         ], 200);
     }
 
+    public function all()
+    {
+        $properties = Property::latest()->get();
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => 'success',
+            'ok' => true,
+            'data' => $properties,
+        ], 200);
+    }    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -56,6 +69,7 @@ class PropertiesController extends Controller
         return response([
             'status' => 200,
             'statusText' => 'success',
+            'message' => '',
             'ok' => true,
             'data' => $property,
         ], 200);
@@ -69,8 +83,51 @@ class PropertiesController extends Controller
      */
     public function show($id)
     {
-        //
+        $property = Property::with(['rooms', 'propertyType'])->find($id);
+
+        if(!$property)
+        {
+            return response([
+                'status' => 200,
+                'statusText' => 'error',
+                'message' => 'Not found',
+                'ok' => true,
+                'data' => $property,
+            ], 200);            
+        }
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => '',
+            'ok' => true,
+            'data' => $property,
+        ], 200);        
     }
+
+    public function rooms($id)
+    {
+        $property = Property::with('rooms')->find($id);
+
+        if(!$property)
+        {
+            return response([
+                'status' => 200,
+                'statusText' => 'error',
+                'message' => 'Not found',
+                'ok' => true,
+                'data' => $property,
+            ], 200);            
+        }
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => '',
+            'ok' => true,
+            'data' => $property->rooms,
+        ], 200);        
+    }    
 
     /**
      * Show the form for editing the specified resource.

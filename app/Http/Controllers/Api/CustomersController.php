@@ -20,10 +20,24 @@ class CustomersController extends Controller
         return response([
             'status' => 200,
             'statusText' => 'success',
+            'message' => 'success',
             'ok' => true,
             'data' => $customers,
         ], 200);
     }
+
+    public function all()
+    {
+        $customers = Customer::latest()->get();
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => 'success',
+            'ok' => true,
+            'data' => $customers,
+        ], 200);
+    }    
 
     /**
      * Show the form for creating a new resource.
@@ -71,7 +85,15 @@ class CustomersController extends Controller
      */
     public function show($id)
     {
-        //
+        $customer = Customer::with(['customerType', 'customerContracts'])->find($id);
+        
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => 'success',
+            'ok' => true,
+            'data' => $customer,
+        ], 200);
     }
 
     /**

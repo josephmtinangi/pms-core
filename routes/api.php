@@ -35,6 +35,8 @@ Route::group(['middleware' => 'jwt.auth'], function(){
    
    Route::get('dashboard', 'Api\DashboardController@index');
    
+   Route::get('attachments/{category}/{filename}', 'Api\AttachmentsController@index');
+   
    Route::resource('users', 'Api\UsersController');
    
    Route::resource('regions', 'Api\RegionsController');
@@ -50,13 +52,22 @@ Route::group(['middleware' => 'jwt.auth'], function(){
    Route::resource('clients', 'Api\ClientsController');
    
    Route::resource('property-types', 'Api\PropertyTypesController');
+   Route::get('properties/all', 'Api\PropertiesController@all');
+   Route::get('properties/{property}/rooms', 'Api\PropertiesController@rooms');
    Route::resource('properties', 'Api\PropertiesController');
    
    Route::resource('customer-types', 'Api\CustomerTypesController');
+   Route::get('customers/all', 'Api\CustomersController@all');
    Route::resource('customers', 'Api\CustomersController');
    
    Route::resource('accounts', 'Api\AccountsController');
    
    Route::post('rooms/upload', 'Api\RoomsController@upload');
    Route::resource('rooms', 'Api\RoomsController');
+
+   Route::post('lease', 'Api\LeaseController@store');
+   
+   Route::get('customer-payments', 'Api\CustomerPaymentController@index');
+
+   Route::resource('real-estate-agents', 'Api\RealEstateAgentsController');
 });
