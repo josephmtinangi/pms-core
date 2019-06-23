@@ -10,7 +10,7 @@ class CustomerPaymentController extends Controller
 {
     public function index()
     {
-    	$customerPayments = CustomerPayment::latest()->paginate(100);
+    	$customerPayments = CustomerPayment::with('customer')->latest()->paginate(100);
     	
         return response([
             'status' => 200,
