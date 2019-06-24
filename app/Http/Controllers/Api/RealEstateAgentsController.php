@@ -86,7 +86,26 @@ class RealEstateAgentsController extends Controller
      */
     public function show($id)
     {
-        //
+        $realEstateAgent = RealEstateAgent::with('accounts')->find($id);
+
+        if(!$realEstateAgent)
+        {
+            return response([
+                'status' => 400,
+                'statusText' => 'error',
+                'message' => 'not found',
+                'ok' => true,
+                'data' => $realEstateAgent,
+            ], 400);             
+        }
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => '',
+            'ok' => true,
+            'data' => $realEstateAgent,
+        ], 200); 
     }
 
     /**
