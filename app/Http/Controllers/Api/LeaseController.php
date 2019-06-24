@@ -94,20 +94,19 @@ class LeaseController extends Controller
     	$customerContract->contract_duration = $request->contract_duration;
     	$customerContract->save();
 
-    	$roomIds = explode(',', $request->rooms);
+        $roomIds = explode(',', $request->roomsIds);
     	foreach ($roomIds as $key => $value) {
-    		$room = Room::wherePropertyId($property->id)->find($value);
+    		
+            $room = Room::wherePropertyId($property->id)->whereStatus('active')->find($value);
 
     		if($room){
-                if($room->status == 'active'){
-                    $room->status = 'rented';
-                    $room->save();
-
-                    $customerContractRoom = new CustomerContractRoom;
-                    $customerContractRoom->customer_contract_id = $customerContract->id;
-                    $customerContractRoom->room_id = $room->id;
-                    $customerContractRoom->save();                
-                }
+                $customerContractRoom = new CustomerContractRoom;
+                $customerContractRoom->customer_contract_id = $customerContract->id;
+                $customerContractRoom->room_id = $room->id;
+                $customerContractRoom->save();  
+                
+                $room->status = 'rented';
+                $room->save();
 	    	}
     	}
 

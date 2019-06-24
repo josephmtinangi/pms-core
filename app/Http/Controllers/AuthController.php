@@ -16,8 +16,11 @@ class AuthController extends Controller
 		]);
 
 	    $user = new User;
+	    $user->first_name = $request->first_name;
+	    $user->middle_name = $request->middle_name;
+	    $user->last_name = $request->last_name;
+	    $user->phone = $request->phone;
 	    $user->email = $request->email;
-	    $user->name = $request->name;
 	    $user->password = bcrypt($request->password);
 	    $user->save();
 	    
@@ -46,14 +49,14 @@ class AuthController extends Controller
 	    $user->save();
 	    
 	    return response([
-	    			'status' => 200,
-	    			'statusText' => 'success',
-	    			'ok' => true,
-	    			'message' => '',
-	    			'data' => [
-		            	'token' => $token,
-		            	'user' => $user,
-	    			]
+			'status' => 200,
+			'statusText' => 'success',
+			'ok' => true,
+			'message' => '',
+			'data' => [
+            	'token' => $token,
+            	'user' => $user,
+			]
 		], 200);
 	}	
 
