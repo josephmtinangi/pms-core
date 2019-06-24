@@ -14,5 +14,10 @@ class Client extends Model
     public function accounts()
     {
         return $this->morphMany('App\Models\Account', 'accountable');
-    }       
+    }   
+
+    public function properties()
+    {
+    	return $this->hasMany(Property::class);
+    }    
 }

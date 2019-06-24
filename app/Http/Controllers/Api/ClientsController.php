@@ -107,7 +107,7 @@ class ClientsController extends Controller
      */
     public function show($id)
     {
-        $client = Client::with('accounts')->find($id);
+        $client = Client::with(['clientType','accounts', 'properties.propertyType', 'properties.village'])->find($id);
 
         if(!$client)
         {
