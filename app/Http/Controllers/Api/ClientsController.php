@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Client;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -73,6 +74,13 @@ class ClientsController extends Controller
         $client->tin = $request->tin;
 
         $client->save();
+        
+        $account = new Account;
+        $account->name = $request->account_name;
+        $account->number = $request->account_number;
+
+        $client->accounts()->save($account);
+
 
         return response([
             'status' => 200,

@@ -15,8 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-use Carbon\Carbon;
-Route::get('test', function () {
+use App\Models\Client;
+use App\Models\Account;
+Route::get('test/{id}', function ($id) {
 
-	\Log::info('okay');
+	return Account::latest()->get();
 });
