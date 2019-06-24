@@ -65,7 +65,7 @@ Route::group(['middleware' => 'jwt.auth'], function(){
    Route::post('rooms/upload', 'Api\RoomsController@upload');
    Route::resource('rooms', 'Api\RoomsController');
 
-   Route::post('lease', 'Api\LeaseController@store');
+   Route::resource('leases', 'Api\LeaseController');
    
    Route::get('customer-payments', 'Api\CustomerPaymentController@index');
 

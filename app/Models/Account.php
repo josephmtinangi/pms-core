@@ -9,5 +9,5 @@ class Account extends Model
     public function accountable()
     {
         return $this->morphTo();
-    }   
+    }  
 }

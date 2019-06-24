@@ -40,14 +40,18 @@ class LeaseController extends Controller
 	            'data' => null,
 	        ], 400);			
 		}  	
-    	// which rooms
+    	
+        $start_date = Carbon::parse($request->start_date);
+        $end_date = Carbon::parse($request->end_date);
 
     	$customerContract = new CustomerContract();
     	$customerContract->customer_id = $customer->id;
     	$customerContract->property_id = $property->id;
-    	$customerContract->start_date = Carbon::today()->addMonths(-5);
-    	$customerContract->end_date = Carbon::today()->addMonths(7);
+    	$customerContract->start_date = $start_date;
+    	$customerContract->end_date = $end_date;
+
     	$customerContract->control_number = null;
+
     	$customerContract->rent_per_month = $request->rent_per_month;
     	$customerContract->payment_interval = $request->payment_interval;
     	$customerContract->contract_duration = $request->contract_duration;
@@ -55,55 +59,27 @@ class LeaseController extends Controller
 
     	$roomIds = explode(',', $request->rooms);
     	foreach ($roomIds as $key => $value) {
-    		$room = Room::find($value);
+    		$room = Room::wherePropertyId($property->id)->find($value);
 
     		if($room){
-	    		$customerContractRoom = new CustomerContractRoom;
-	    		$customerContractRoom->customer_contract_id = $customerContract->id;
-	    		$customerContractRoom->room_id = $room->id;
-	    		$customerContractRoom->save();
+                if($room->status == 'active'){
+                    $room->status = 'rented';
+                    $room->save();
+
+                    $customerContractRoom = new CustomerContractRoom;
+                    $customerContractRoom->customer_contract_id = $customerContract->id;
+                    $customerContractRoom->room_id = $room->id;
+                    $customerContractRoom->save();                
+                }
 	    	}
     	}
-
-    	$start_date = $customerContract->start_date;
-    	return $end_date = $start_date->addMonths($customerContract->payment_interval);
-        $start_date = $customerContract->start_date->addMonths(0 - $customerContract->payment_interval);
-    	
-    	$incrementor = 1;
-    	$amount = $customerContract->rent_per_month * $customerContract->payment_interval;
-        
-    	do {
-            \Log::info('start_date = ' . $start_date);
-    		\Log::info('end_date = ' . $end_date);
-
-    		$customerPaymentSchedule = new CustomerPaymentSchedule;
-    		$customerPaymentSchedule->customer_contract_id = $customerContract->id;
-    		$customerPaymentSchedule->start_date = $start_date;
-    		$customerPaymentSchedule->end_date = $start_date->addMonths($customerContract->payment_interval);
-    		$customerPaymentSchedule->amount_to_be_paid = $amount * $incrementor;
-    		$customerPaymentSchedule->amount_remained = $amount * $incrementor;
-
-    		if($customerPaymentSchedule->end_date < Carbon::today())
-    		{
-    			$customerPaymentSchedule->active = false;
-    		}
-    		else
-    		{
-    			$customerPaymentSchedule->active = true;
-    		}
-	    	$customerPaymentSchedule->save();
-
-	    	$incrementor++;
-	    	$start_date = $customerPaymentSchedule->end_date;
-	    	$end_date = $customerPaymentSchedule->end_date;
-    	} while($end_date < Carbon::today());
 
         return response([
             'status' => 200,
             'statusText' => 'success',
             'message' => 'success',
             'ok' => true,
-            'data' => $customer,
+            'data' => $customerContract,
         ], 200);    	
     }
 }

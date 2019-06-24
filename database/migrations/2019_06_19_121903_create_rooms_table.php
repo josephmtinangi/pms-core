@@ -22,7 +22,7 @@ class CreateRoomsTable extends Migration
             $table->double('price_per_sqm');
             $table->string('currency')->default('TZS');
             $table->unsignedInteger('property_id');
-            $table->string('status');
+            $table->string('status')->default('active');
             $table->timestamps();
 
             $table->foreign('property_id')->references('id')->on('properties');
