@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Models\RealEstateAgent;
 use App\Http\Controllers\Controller;
@@ -52,6 +53,21 @@ class RealEstateAgentsController extends Controller
         $realEstateAgent->phone = $request->phone;
         $realEstateAgent->email = $request->email;
         $realEstateAgent->save();
+
+        $account = new Account;
+        $account->name = $request->account_name;
+        $account->number = $request->account_number;
+
+        if(!Account::latest()->first())
+        {
+            $account->code = sprintf('%03d', 1);
+        }
+        else
+        {
+            $account->code = sprintf('%03d', ((int)Account::latest()->first()->code)+1);
+        }
+
+        $realEstateAgent->accounts()->save($account);        
 
         return response([
             'status' => 200,

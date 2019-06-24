@@ -74,10 +74,19 @@ class ClientsController extends Controller
         $client->tin = $request->tin;
 
         $client->save();
-        
+
         $account = new Account;
         $account->name = $request->account_name;
         $account->number = $request->account_number;
+
+        if(!Account::latest()->first())
+        {
+            $account->code = sprintf('%03d', 1);
+        }
+        else
+        {
+            $account->code = sprintf('%03d', ((int)Account::latest()->first()->code)+1);
+        }        
 
         $client->accounts()->save($account);
 
