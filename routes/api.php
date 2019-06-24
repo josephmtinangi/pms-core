@@ -67,6 +67,8 @@ Route::group(['middleware' => 'jwt.auth'], function(){
 
    Route::resource('leases', 'Api\LeaseController');
    
+   Route::resource('control-numbers', 'Api\ControlNumbersController');
+   
    Route::get('customer-payments', 'Api\CustomerPaymentController@index');
 
    Route::resource('real-estate-agents', 'Api\RealEstateAgentsController');

@@ -14,6 +14,43 @@ use App\Models\CustomerPaymentSchedule;
 
 class LeaseController extends Controller
 {
+    public function index()
+    {
+        $leases = CustomerContract::with(['customer', 'property'])->latest()->paginate(100);
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => '',
+            'ok' => true,
+            'data' => $leases,
+        ], 200);        
+    }
+
+    public function show($id)
+    {
+        $lease = CustomerContract::with(['controlNumbers','customer', 'property', 'rooms.room'])->find($id);
+
+        if(!$lease)
+        {
+            return response([
+                'status' => 400,
+                'statusText' => 'error',
+                'message' => 'Lease not found',
+                'ok' => true,
+                'data' => $lease,
+            ], 400);            
+        }
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => '',
+            'ok' => true,
+            'data' => $lease,
+        ], 200);        
+    }    
+
     public function store(Request $request)
     {
     	// which customer

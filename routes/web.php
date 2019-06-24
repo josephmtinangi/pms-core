@@ -15,9 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-use App\Models\Client;
-use App\Models\Account;
-Route::get('test/{id}', function ($id) {
+use Carbon\Carbon;
+Route::get('test', function () {
 
-	return Account::latest()->get();
+	return Carbon::now();
 });

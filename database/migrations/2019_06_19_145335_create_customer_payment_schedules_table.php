@@ -18,8 +18,9 @@ class CreateCustomerPaymentSchedulesTable extends Migration
             $table->unsignedInteger('customer_contract_id');
             $table->date('start_date');
             $table->date('end_date');
+            $table->date('expiry_date');
             $table->double('amount_to_be_paid');
-            $table->double('amount_remained');
+            $table->string('control_number')->unique();
             $table->boolean('active')->default(true);
             $table->timestamps();
 
