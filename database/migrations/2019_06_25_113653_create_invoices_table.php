@@ -17,7 +17,7 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->increments('id');
             $table->string('number');
-            $table->timestamp('paid_at')->default(null);
+            $table->timestamp('paid_at')->nullable()->default(null);
             $table->integer('invoiceable_id');
             $table->string('invoiceable_type');
             $table->timestamps();

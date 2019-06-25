@@ -15,7 +15,7 @@ class CustomersController extends Controller
      */
     public function index()
     {
-        $customers = Customer::with('customerType')->latest()->paginate(20);
+        $customers = Customer::with('customerType')->latest()->paginate(100);
 
         return response([
             'status' => 200,
@@ -67,6 +67,16 @@ class CustomersController extends Controller
         $customer->physical_address = $request->physical_address;
         $customer->postal_address = $request->postal_address;
         $customer->tin = $request->tin;
+
+        if(!Customer::latest()->first())
+        {
+            $customer->code = sprintf('%03d', 1);
+        }
+        else
+        {
+            $customer->code = sprintf('%03d', Customer::latest()->first()->code + 1);
+        }
+
         $customer->save();
         
         return response([

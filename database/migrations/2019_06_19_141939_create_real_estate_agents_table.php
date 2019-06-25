@@ -16,7 +16,7 @@ class CreateRealEstateAgentsTable extends Migration
         Schema::create('real_estate_agents', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('logo');
+            $table->string('logo')->nullable();
             $table->string('postal_address');
             $table->string('physical_address');
             $table->string('phone')->unique();

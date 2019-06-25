@@ -74,6 +74,15 @@ class ClientsController extends Controller
         $client->postal_address = $request->postal_address;
         $client->tin = $request->tin;
 
+        if(!Client::latest()->first())
+        {
+            $client->code = sprintf('%03d', 1);
+        }
+        else
+        {
+            $client->code = sprintf('%03d', Client::latest()->first()->code + 1);
+        }
+
         $client->save();
 
         $account = new Account;
