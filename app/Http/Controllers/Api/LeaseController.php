@@ -29,7 +29,7 @@ class LeaseController extends Controller
 
     public function show($id)
     {
-        $lease = CustomerContract::with(['controlNumbers','customer', 'property', 'rooms.room'])->find($id);
+        $lease = CustomerContract::with(['controlNumbers', 'controlNumbers.invoices','customer', 'property', 'rooms.room'])->find($id);
 
         if(!$lease)
         {

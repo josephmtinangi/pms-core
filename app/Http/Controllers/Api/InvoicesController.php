@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Invoice;
 use Illuminate\Http\Request;
+use App\Models\RealEstateAgent;
+use App\Models\CustomerContract;
 use App\Http\Controllers\Controller;
+use App\Models\CustomerPaymentSchedule;
 
 class InvoicesController extends Controller
 {
@@ -25,6 +28,13 @@ class InvoicesController extends Controller
     {
     	$invoice = Invoice::find($id);
 
+    	$agent = RealEstateAgent::first();
+
+    	$customerPaymentSchedule = CustomerPaymentSchedule::find($invoice->invoiceable_id);
+
+    	$customerContract = CustomerContract::with(['customer', 'property', 'rooms', 'customer'])
+    											->find($customerPaymentSchedule->customer_contract_id);
+
     	if(!$invoice)
     	{
 	        return response([
@@ -41,7 +51,12 @@ class InvoicesController extends Controller
             'statusText' => 'success',
             'message' => '',
             'ok' => true,
-            'data' => $invoice,
+            'data' => [
+            	'invoice' => $invoice,
+            	'agent' => $agent,
+            	'customerPaymentSchedule' => $customerPaymentSchedule,
+            	'customerContract' => $customerContract,
+            ],
         ], 200);
     }
 }
