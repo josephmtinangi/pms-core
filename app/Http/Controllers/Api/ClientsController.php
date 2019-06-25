@@ -21,6 +21,7 @@ class ClientsController extends Controller
         return response([
             'status' => 200,
             'statusText' => 'success',
+            'message' => '',
             'ok' => true,
             'data' => $clients,
         ], 200);

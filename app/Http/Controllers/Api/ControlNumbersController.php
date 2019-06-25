@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 use App\Models\CustomerContract;
 use App\Http\Controllers\Controller;
@@ -13,7 +14,7 @@ class ControlNumbersController extends Controller
     public function index()
     {
 
-    	$customerPaymentSchedule = CustomerPaymentSchedule::latest()->paginate(100);
+    	$customerPaymentSchedule = CustomerPaymentSchedule::with('invoices')->latest()->paginate(100);
 
         return response([
             'status' => 200,
@@ -27,7 +28,6 @@ class ControlNumbersController extends Controller
     public function store(Request $request)
     {
     	$lease = CustomerContract::find($request->customer_contract_id);
-
 
     	$existingCustomerPaymentSchedule = CustomerPaymentSchedule::whereCustomerContractId($lease->id)->whereActive(true)->first();
 
@@ -64,6 +64,20 @@ class ControlNumbersController extends Controller
 		$customerPaymentSchedule->control_number = $control_number;
 
     	$customerPaymentSchedule->save();
+
+        // Generate invoice
+        $invoice = new Invoice;
+
+        if(!Invoice::latest()->first())
+        {
+            $invoice->number = sprintf('%06d', 1);
+        }
+        else
+        {
+            $invoice->number = sprintf('%06d', ((int)Invoice::latest()->first()->number) + 1);
+        }        
+
+        $customerPaymentSchedule->invoices()->save($invoice);        
 
         return response([
             'status' => 200,

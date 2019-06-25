@@ -69,6 +69,8 @@ Route::group(['middleware' => 'jwt.auth'], function(){
    
    Route::resource('control-numbers', 'Api\ControlNumbersController');
    
+   Route::resource('invoices', 'Api\InvoicesController');
+   
    Route::get('customer-payments', 'Api\CustomerPaymentController@index');
 
    Route::resource('real-estate-agents', 'Api\RealEstateAgentsController');

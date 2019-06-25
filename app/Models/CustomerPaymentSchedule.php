@@ -11,4 +11,9 @@ class CustomerPaymentSchedule extends Model
     	'end_date',
     	'expiry_date',
     ];
+
+    public function invoices()
+    {
+        return $this->morphMany('App\Models\Invoice', 'invoiceable');
+    }    
 }
