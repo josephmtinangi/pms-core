@@ -32,7 +32,7 @@ class InvoicesController extends Controller
 
     	$customerPaymentSchedule = CustomerPaymentSchedule::find($invoice->invoiceable_id);
 
-    	$customerContract = CustomerContract::with(['customer', 'property', 'rooms', 'customer'])
+    	$customerContract = CustomerContract::with(['customer', 'property', 'rooms', 'rooms.room', 'customer'])
     											->find($customerPaymentSchedule->customer_contract_id);
 
     	if(!$invoice)
