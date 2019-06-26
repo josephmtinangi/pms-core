@@ -53,7 +53,7 @@ class ControlNumbersController extends Controller
     		$existingCustomerPaymentSchedule->save();
     	}
 
-    	$initial = '21';
+    	$initial = config()->get('pms.control_number.initial');
     	$accountCode = $lease->property->client->accounts->first()->code;
     	$chargeableCode = 0;
     	$customerCode = $lease->customer->code;

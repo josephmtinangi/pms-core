@@ -19,5 +19,10 @@ class Client extends Model
     public function properties()
     {
     	return $this->hasMany(Property::class);
-    }    
+    }
+
+    public function name()
+    {
+        return $this->first_name.' '.$this->middle_name.' '.$this->last_name;
+    }  
 }
