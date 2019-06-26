@@ -20,3 +20,7 @@ Route::get('test', function () {
 
 	return Carbon::now();
 });
+
+Route::get('invoice/{invoice}', 'PdfController@show');
+
+Route::get('invoice/{invoice}/save', 'PdfController@save');
