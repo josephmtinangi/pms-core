@@ -45,6 +45,32 @@ class PdfController extends Controller
 
     public function save(Invoice $invoice)
     {
-        Storage::disk('public')->put('invoices/INVOICE-'.$invoice->number.'.pdf', $this->pdf->generate($invoice));
+        $filepath = 'invoices/INVOICE-'.$invoice->number.'.pdf';
+        
+        $status = Storage::disk('public')->put($filepath, $this->pdf->generate($invoice));
+
+        if(!$status)
+        {
+            return response([
+                'status' => 400,
+                'statusText' => 'success',
+                'message' => '',
+                'ok' => true,
+                'data' => null,
+            ], 400);
+        }
+        else
+        {
+            $invoice->path = $filepath;
+            $invoice->save();
+            
+            return response([
+                'status' => 200,
+                'statusText' => 'success',
+                'message' => '',
+                'ok' => true,
+                'data' => $invoice,
+            ], 200);
+        }        
     }
 }

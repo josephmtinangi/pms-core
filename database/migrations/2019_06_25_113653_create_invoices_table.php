@@ -18,6 +18,7 @@ class CreateInvoicesTable extends Migration
             $table->increments('id');
             $table->string('number');
             $table->timestamp('paid_at')->nullable()->default(null);
+            $table->string('path')->nullable();
             $table->integer('invoiceable_id');
             $table->string('invoiceable_type');
             $table->timestamps();
