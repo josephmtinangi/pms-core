@@ -57,7 +57,7 @@ class ControlNumbersController extends Controller
     	$accountCode = $lease->property->client->accounts->first()->code;
     	$chargeableCode = 0;
     	$customerCode = $lease->customer->code;
-    	$customerRandom = sprintf('%6d', rand(1, 99999));
+    	$customerRandom = sprintf('%06d', rand(1, 99999));
 
     	$control_number = $initial.''.$accountCode.''.$chargeableCode.''.$customerCode.''.$customerRandom;
 
