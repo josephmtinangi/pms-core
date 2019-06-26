@@ -26,4 +26,16 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function getAvatarAttribute($value)
+    {
+        if($value)
+        {
+            return $value;
+        }
+        else
+        {
+            return "avatars/default.png";
+        }
+    }
 }

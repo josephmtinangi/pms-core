@@ -39,7 +39,7 @@ class PdfController extends Controller
     {
         return response($this->pdf->generate($invoice), 200)->withHeaders([
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => "{$this->pdf->action()}; filename=invoice-{$invoice->id}.pdf",
+            'Content-Disposition' => "{$this->pdf->action()}; filename=INVOICE-{$invoice->number}.pdf",
         ]);
     }
 
@@ -47,34 +47,20 @@ class PdfController extends Controller
     {
         $filepath = 'invoices/INVOICE-'.$invoice->number.'.pdf';
         
-        $status = false;
         if(!$invoice->path)
         {
-            $status = Storage::disk('public')->put($filepath, $this->pdf->generate($invoice));
+            Storage::disk('public')->put($filepath, $this->pdf->generate($invoice));
         }
 
-        if(!$status)
-        {
-            return response([
-                'status' => 400,
-                'statusText' => 'error',
-                'message' => 'Invoice already exists',
-                'ok' => false,
-                'data' => null,
-            ], 400);
-        }
-        else
-        {
-            $invoice->path = $filepath;
-            $invoice->save();
-            
-            return response([
-                'status' => 200,
-                'statusText' => 'success',
-                'message' => '',
-                'ok' => true,
-                'data' => $invoice,
-            ], 200);
-        }        
+        $invoice->path = $filepath;
+        $invoice->save();
+        
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => '',
+            'ok' => true,
+            'data' => $invoice,
+        ], 200);      
     }
 }
