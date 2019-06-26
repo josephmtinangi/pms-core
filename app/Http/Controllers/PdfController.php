@@ -47,15 +47,19 @@ class PdfController extends Controller
     {
         $filepath = 'invoices/INVOICE-'.$invoice->number.'.pdf';
         
-        $status = Storage::disk('public')->put($filepath, $this->pdf->generate($invoice));
+        $status = false;
+        if(!$invoice->path)
+        {
+            $status = Storage::disk('public')->put($filepath, $this->pdf->generate($invoice));
+        }
 
         if(!$status)
         {
             return response([
                 'status' => 400,
-                'statusText' => 'success',
-                'message' => '',
-                'ok' => true,
+                'statusText' => 'error',
+                'message' => 'Invoice already exists',
+                'ok' => false,
                 'data' => null,
             ], 400);
         }

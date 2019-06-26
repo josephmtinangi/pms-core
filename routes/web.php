@@ -24,3 +24,5 @@ Route::get('test', function () {
 Route::get('invoice/{invoice}', 'PdfController@show');
 
 Route::get('invoice/{invoice}/save', 'PdfController@save');
+
+Route::get('attachments/{category}/{filename}', 'Api\AttachmentsController@index');

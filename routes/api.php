@@ -35,7 +35,7 @@ Route::group(['middleware' => 'jwt.auth'], function(){
    
    Route::get('dashboard', 'Api\DashboardController@index');
    
-   Route::get('attachments/{category}/{filename}', 'Api\AttachmentsController@index');
+   // Route::get('attachments/{category}/{filename}', 'Api\AttachmentsController@index');
    
    Route::resource('users', 'Api\UsersController');
    
