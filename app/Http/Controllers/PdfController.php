@@ -6,6 +6,9 @@ use Storage;
 use App\Services\Pdf;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
+use App\Models\RealEstateAgent;
+use App\Models\CustomerContract;
+use App\Models\CustomerPaymentSchedule;
 
 class PdfController extends Controller
 {
@@ -37,7 +40,12 @@ class PdfController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        return response($this->pdf->generate($invoice), 200)->withHeaders([
+        $agent = RealEstateAgent::latest()->first();
+        $customerPaymentSchedule = CustomerPaymentSchedule::find($invoice->invoiceable_id);
+        $customerContract = CustomerContract::with(['customer', 'property', 'rooms', 'rooms.room', 'customer'])
+                                                ->find($customerPaymentSchedule->customer_contract_id); 
+
+        return response($this->pdf->generate($invoice, $agent, $customerPaymentSchedule, $customerContract), 200)->withHeaders([
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => "{$this->pdf->action()}; filename=INVOICE-{$invoice->number}.pdf",
         ]);
@@ -47,13 +55,18 @@ class PdfController extends Controller
     {
         $filepath = 'invoices/INVOICE-'.$invoice->number.'.pdf';
         
+        $agent = RealEstateAgent::latest()->first();
+        $customerPaymentSchedule = CustomerPaymentSchedule::find($invoice->invoiceable_id);
+        $customerContract = CustomerContract::with(['customer', 'property', 'rooms', 'rooms.room', 'customer'])
+                                                ->find($customerPaymentSchedule->customer_contract_id);
+
         if(!$invoice->path)
         {
-            Storage::disk('public')->put($filepath, $this->pdf->generate($invoice));
+            Storage::disk('public')->put($filepath, $this->pdf->generate($invoice, $agent, $customerPaymentSchedule, $customerContract));
         }
 
         $invoice->path = $filepath;
-        $invoice->save();
+        $invoice->save();         
         
         return response([
             'status' => 200,

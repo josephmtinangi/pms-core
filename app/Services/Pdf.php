@@ -2,9 +2,12 @@
 
 namespace App\Services; 
 
-use App\Models\Invoice;
 use Dompdf\Dompdf; 
+use App\Models\Invoice;
+use App\Models\RealEstateAgent;
+use App\Models\CustomerContract;
 use Illuminate\Support\Facades\View; 
+use App\Models\CustomerPaymentSchedule;
 
 class Pdf extends Dompdf 
 { 
@@ -36,10 +39,10 @@ class Pdf extends Dompdf
      * @param  \App\Invoice  $invoice
      * @return string
      */
-    public function generate(Invoice $invoice)
+    public function generate(Invoice $invoice, RealEstateAgent $agent, CustomerPaymentSchedule $customerPaymentSchedule, CustomerContract $customerContract)
     {
         $this->loadHtml(
-            View::make('invoice', compact('invoice'))->render()
+            View::make('invoice', compact(['agent','invoice', 'customerPaymentSchedule','customerContract']))->render()
         );
 
         $this->render();
