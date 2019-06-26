@@ -70,6 +70,7 @@ Route::group(['middleware' => 'jwt.auth'], function(){
    Route::resource('invoices', 'Api\InvoicesController');
    
    Route::get('customer-payments', 'Api\CustomerPaymentController@index');
+   Route::get('client-payments', 'Api\ClientPaymentController@index');
 
    Route::resource('real-estate-agents', 'Api\RealEstateAgentsController');
 });
