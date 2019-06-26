@@ -73,3 +73,6 @@ Route::group(['middleware' => 'jwt.auth'], function(){
 
    Route::resource('real-estate-agents', 'Api\RealEstateAgentsController');
 });
+
+Route::post('payments/inquire', 'PaymentsController@inquire');
+Route::post('payments/pay', 'PaymentsController@pay');

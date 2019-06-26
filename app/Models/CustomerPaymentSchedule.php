@@ -16,4 +16,9 @@ class CustomerPaymentSchedule extends Model
     {
         return $this->morphMany('App\Models\Invoice', 'invoiceable');
     }    
+
+    public function customerContract()
+    {
+    	return $this->belongsTo(CustomerContract::class);
+    }
 }

@@ -22,6 +22,7 @@ class CreateCustomerPaymentSchedulesTable extends Migration
             $table->double('amount_to_be_paid');
             $table->string('control_number')->unique();
             $table->boolean('active')->default(true);
+            $table->timestamp('paid_at')->nullable()->default(null);
             $table->timestamps();
 
             $table->foreign('customer_contract_id')->references('id')->on('customer_contracts');
