@@ -60,6 +60,7 @@ class PropertiesController extends Controller
         $property = new Property;
         $property->name = $request->name;
         $property->property_type_id = $request->property_type_id;
+        $property->commision = $request->commision;
         $property->client_id = $request->client_id;
         $property->physical_address = $request->physical_address;
         $property->floors = $request->floors;
