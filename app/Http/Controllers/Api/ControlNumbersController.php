@@ -84,7 +84,10 @@ class ControlNumbersController extends Controller
             'statusText' => 'success',
             'message' => '',
             'ok' => true,
-            'data' => $customerPaymentSchedule,
+            'data' => [
+                'customerPaymentSchedule' => $customerPaymentSchedule,
+                'invoice' => $customerPaymentSchedule->invoices()->first(),
+            ],
         ], 200);    	
     }
 }

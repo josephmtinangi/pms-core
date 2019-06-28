@@ -94,8 +94,7 @@ class LeaseController extends Controller
     	$customerContract->contract_duration = $request->contract_duration;
     	$customerContract->save();
 
-        $roomIds = explode(',', $request->roomsIds);
-    	foreach ($roomIds as $key => $value) {
+    	foreach ($request->rooms as $key => $value) {
     		
             $room = Room::wherePropertyId($property->id)->whereStatus('active')->find($value);
 

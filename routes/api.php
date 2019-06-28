@@ -68,6 +68,8 @@ Route::group(['middleware' => 'jwt.auth'], function(){
    Route::resource('control-numbers', 'Api\ControlNumbersController');
    
    Route::resource('invoices', 'Api\InvoicesController');
+
+   Route::post('invoice/{invoice}/save', 'PdfController@save');
    
    Route::get('customer-payments', 'Api\CustomerPaymentController@index');
    Route::get('client-payments', 'Api\ClientPaymentController@index');
