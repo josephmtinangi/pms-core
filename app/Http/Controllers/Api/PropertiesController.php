@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Property;
+use App\Models\PaymentMode;
 use Illuminate\Http\Request;
+use App\Models\PropertyPaymentMode;
 use App\Http\Controllers\Controller;
 
 class PropertiesController extends Controller
@@ -57,6 +59,20 @@ class PropertiesController extends Controller
      */
     public function store(Request $request)
     {
+
+        $paymentMode = PaymentMode::find($request->payment_mode_id);
+
+        if(!$paymentMode)
+        {
+            return response([
+                'status' => 400,
+                'statusText' => 'Bad request',
+                'message' => 'Payment mode not found',
+                'ok' => true,
+                'data' => $property,
+            ], 400);            
+        }
+
         $property = new Property;
         $property->name = $request->name;
         $property->property_type_id = $request->property_type_id;
@@ -66,6 +82,12 @@ class PropertiesController extends Controller
         $property->floors = $request->floors;
         $property->village_id = $request->village_id;
         $property->save();
+
+        $propertyPaymentMode = new PropertyPaymentMode;
+        $propertyPaymentMode->property_id = $property->id;
+        $propertyPaymentMode->payment_mode_id = $paymentMode->id;
+        $propertyPaymentMode->amount = $request->amount;
+        $propertyPaymentMode->save();
 
         return response([
             'status' => 200,

@@ -50,7 +50,7 @@ class RoomsController extends Controller
         $room->metrics = $request->metrics;
         $room->size = $request->size;
         $room->price_per_sqm = $request->price_per_sqm;
-        $room->currency = $request->currency;
+        $room->currency = 'TZS';
         $room->property_id = $request->property_id;
         $room->save();
 

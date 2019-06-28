@@ -36,17 +36,17 @@ class ControlNumbersController extends Controller
     	if(!$existingCustomerPaymentSchedule)
     	{
     		$customerPaymentSchedule->start_date = $lease->start_date;
-    		$customerPaymentSchedule->end_date = $lease->start_date->lastOfMonth();
-    		$customerPaymentSchedule->expiry_date = $lease->start_date->lastOfMonth();
-    		$customerPaymentSchedule->amount_to_be_paid = $lease->rent_per_month;
+    		$customerPaymentSchedule->end_date = $lease->start_date->addMonths($lease->payment_interval);
+    		$customerPaymentSchedule->expiry_date = $lease->start_date->addMonths($lease->payment_interval);
+    		$customerPaymentSchedule->amount_to_be_paid = $lease->rent_per_month * $lease->payment_interval;
     		$customerPaymentSchedule->active = true;
     	}
     	else
     	{
-    		$customerPaymentSchedule->start_date = $existingCustomerPaymentSchedule->start_date->addMonth();
-    		$customerPaymentSchedule->end_date = $existingCustomerPaymentSchedule->start_date->addMonth()->lastOfMonth();
-    		$customerPaymentSchedule->expiry_date = $existingCustomerPaymentSchedule->start_date->addMonth()->lastOfMonth();
-    		$customerPaymentSchedule->amount_to_be_paid = $lease->rent_per_month;
+    		$customerPaymentSchedule->start_date = $existingCustomerPaymentSchedule->end_date;
+    		$customerPaymentSchedule->end_date = $existingCustomerPaymentSchedule->end_date->addMonths($lease->payment_interval);
+    		$customerPaymentSchedule->expiry_date = $existingCustomerPaymentSchedule->end_date->addMonths($lease->payment_interval);
+    		$customerPaymentSchedule->amount_to_be_paid = $lease->rent_per_month * $lease->payment_interval;
     		$customerPaymentSchedule->active = true;
 
     		$existingCustomerPaymentSchedule->active = false;

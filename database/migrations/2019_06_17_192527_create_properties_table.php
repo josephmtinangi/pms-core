@@ -19,7 +19,6 @@ class CreatePropertiesTable extends Migration
             $table->unsignedInteger('property_type_id');
             $table->unsignedInteger('client_id');
             $table->string('physical_address');
-            $table->double('commision')->default(0);
             $table->integer('floors')->default(0);
             $table->unsignedInteger('village_id');
             $table->timestamps();

@@ -37,6 +37,8 @@ Route::group(['middleware' => 'jwt.auth'], function(){
    
    Route::resource('users', 'Api\UsersController');
    
+   Route::resource('payment-modes', 'Api\PaymentModesController');
+   
    Route::resource('regions', 'Api\RegionsController');
    Route::get('regions/{region}/districts', 'Api\RegionsController@districts');
    Route::resource('districts', 'Api\DistrictsController');
