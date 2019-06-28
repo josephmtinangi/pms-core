@@ -96,6 +96,17 @@ class CustomersController extends Controller
     public function show($id)
     {
         $customer = Customer::with(['customerType', 'customerContracts'])->find($id);
+
+        if(!$customer)
+        {
+            return response([
+                'status' => 400,
+                'statusText' => 'Bad request',
+                'message' => 'Not found',
+                'ok' => true,
+                'data' => $customer,
+            ], 400);            
+        }
         
         return response([
             'status' => 200,
@@ -126,7 +137,37 @@ class CustomersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $customer = Customer::find($id);
+
+        if(!$customer)
+        {
+            return response([
+                'status' => 400,
+                'statusText' => 'Bad request',
+                'message' => 'Not found',
+                'ok' => true,
+                'data' => $customer,
+            ], 400);            
+        }
+
+        $customer->first_name = $request->first_name;
+        $customer->middle_name = $request->middle_name;
+        $customer->last_name = $request->last_name;
+        $customer->phone = $request->phone;
+        $customer->email = $request->email;
+        $customer->customer_type_id = $request->customer_type_id;
+        $customer->physical_address = $request->physical_address;
+        $customer->postal_address = $request->postal_address;
+        $customer->tin = $request->tin;
+        $customer->save();        
+        
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => 'success',
+            'ok' => true,
+            'data' => $customer,
+        ], 200);
     }
 
     /**

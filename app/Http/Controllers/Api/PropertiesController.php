@@ -89,12 +89,12 @@ class PropertiesController extends Controller
         if(!$property)
         {
             return response([
-                'status' => 200,
-                'statusText' => 'error',
+                'status' => 400,
+                'statusText' => 'Bad request',
                 'message' => 'Not found',
                 'ok' => true,
                 'data' => $property,
-            ], 200);            
+            ], 400);            
         }
 
         return response([
@@ -150,7 +150,35 @@ class PropertiesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $property = Property::find($id);
+
+        if(!$property)
+        {
+            return response([
+                'status' => 400,
+                'statusText' => 'error',
+                'message' => 'Not found',
+                'ok' => true,
+                'data' => $property,
+            ], 400);            
+        }
+
+        $property->name = $request->name;
+        $property->property_type_id = $request->property_type_id;
+        $property->commision = $request->commision;
+        $property->client_id = $request->client_id;
+        $property->physical_address = $request->physical_address;
+        $property->floors = $request->floors;
+        $property->village_id = $request->village_id;
+        $property->save();        
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => '',
+            'ok' => true,
+            'data' => $property,
+        ], 200);
     }
 
     /**
