@@ -46,7 +46,7 @@ class PaymentsController extends Controller
 		        ], 400);    			
     		}
     		// Valid
-    		if($customerPaymentSchedule->expiry_date > Carbon::today())
+    		if($customerPaymentSchedule->expiry_date < Carbon::today())
     		{
 		        return response([
 		            'status' => 205,
