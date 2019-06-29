@@ -30,4 +30,9 @@ class Property extends Model
     {
         return $this->hasMany(PropertyPaymentMode::class);
     }
+
+    public function propertyPaymentMode()
+    {
+        return $this->hasOne(PropertyPaymentMode::class);
+    }
 }

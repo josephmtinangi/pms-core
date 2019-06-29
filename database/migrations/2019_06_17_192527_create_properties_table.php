@@ -17,6 +17,7 @@ class CreatePropertiesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->unsignedInteger('property_type_id');
+            $table->unsignedInteger('payment_mode_id');
             $table->unsignedInteger('client_id');
             $table->string('physical_address');
             $table->integer('floors')->default(0);
@@ -24,6 +25,7 @@ class CreatePropertiesTable extends Migration
             $table->timestamps();
 
             $table->foreign('property_type_id')->references('id')->on('property_types');
+            $table->foreign('payment_mode_id')->references('id')->on('payment_modes');
             $table->foreign('client_id')->references('id')->on('clients');
             $table->foreign('village_id')->references('id')->on('villages');
         });

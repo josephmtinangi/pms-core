@@ -29,13 +29,13 @@ class User extends Authenticatable
 
     public function getAvatarAttribute($value)
     {
-        if($value)
-        {
-            return $value;
-        }
-        else
-        {
-            return "avatars/default.png";
-        }
+       if(!$value)
+       {
+        return config('app.url').'/attachments/avatars/default.png';
+       }
+       else
+       {
+        return config('app.url').'/attachments/'.$value;
+       }
     }
 }

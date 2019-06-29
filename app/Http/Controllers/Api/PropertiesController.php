@@ -93,6 +93,7 @@ class PropertiesController extends Controller
         $property = new Property;
         $property->name = $request->name;
         $property->property_type_id = $request->property_type_id;
+        $property->payment_mode_id = $paymentMode->id;
         $property->client_id = $client->id;
         $property->physical_address = $request->physical_address;
         $property->floors = $request->floors;
@@ -103,6 +104,8 @@ class PropertiesController extends Controller
         $propertyPaymentMode->property_id = $property->id;
         $propertyPaymentMode->payment_mode_id = $paymentMode->id;
         $propertyPaymentMode->amount = $request->amount;
+        $propertyPaymentMode->start_date = $request->start_date;
+        $propertyPaymentMode->end_date = $request->end_date;
         $propertyPaymentMode->save();
 
         // 01 - fixed amount per property
@@ -161,7 +164,7 @@ class PropertiesController extends Controller
      */
     public function show($id)
     {
-        $property = Property::with(['client', 'client.clientType', 'propertyType', 'rooms'])->find($id);
+        $property = Property::with(['propertyPaymentMode','client', 'client.clientType', 'propertyType', 'rooms'])->find($id);
 
         if(!$property)
         {

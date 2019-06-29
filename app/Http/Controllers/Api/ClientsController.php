@@ -70,6 +70,7 @@ class ClientsController extends Controller
         $client->phone = $request->phone;
         $client->photo = $request->photo;
         $client->email = $request->email;
+        $client->password = bcrypt($request->phone);;
         $client->physical_address = $request->physical_address;
         $client->postal_address = $request->postal_address;
         $client->tin = $request->tin;
