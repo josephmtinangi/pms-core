@@ -180,8 +180,13 @@ class PaymentsController extends Controller
     		$invoice->paid_at = Carbon::now();
     		$invoice->save();
 
-            // generate client payment schedule
-            $this->generateClientPaymentSchedule($customerPayment);            
+            $paymentMode =  $customerPaymentSchedule->customerContract->property->propertyPaymentModes()->latest()->first()->paymentMode;
+            // 03 - commission percentage
+            if($paymentMode->code == '03')
+            {
+                // generate client payment schedule
+                $this->generateClientPaymentSchedule($customerPayment); 
+            }           
     	}
     	if($chargeableTypeCode == 1)
     	{
