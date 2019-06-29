@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\RealEstateAgent;
 use App\Models\CustomerContract;
 use App\Http\Controllers\Controller;
+use App\Models\ClientPaymentSchedule;
 use App\Models\CustomerPaymentSchedule;
 
 class InvoicesController extends Controller
@@ -28,35 +29,53 @@ class InvoicesController extends Controller
     {
     	$invoice = Invoice::find($id);
 
-    	$agent = RealEstateAgent::first();
+        if(!$invoice)
+        {
+            return response([
+                'status' => 400,
+                'statusText' => 'error',
+                'message' => 'Not found',
+                'ok' => true,
+                'data' => $invoice,
+            ], 400);
+        }
 
-    	$customerPaymentSchedule = CustomerPaymentSchedule::find($invoice->invoiceable_id);
+    	$agent = RealEstateAgent::latest()->first();
 
-    	$customerContract = CustomerContract::with(['customer', 'property', 'rooms', 'rooms.room', 'customer'])
+        if($invoice->invoiceable_type == get_class(new ClientPaymentSchedule))
+        {
+            $clientPaymentSchedule = ClientPaymentSchedule::with('client')->find($invoice->invoiceable_id);
+            return response([
+                'status' => 200,
+                'statusText' => 'success',
+                'message' => '',
+                'ok' => true,
+                'data' => [
+                    'invoice' => $invoice,
+                    'agent' => $agent,
+                    'schedule' => $clientPaymentSchedule,
+                    'contract' => null,
+                    'invoiceable_type' => $invoice->invoiceable_type,
+                ],
+            ], 200);
+        }
+        if($invoice->invoiceable_type == get_class(new CustomerPaymentSchedule)){ 
+        	$customerPaymentSchedule = CustomerPaymentSchedule::with('customerContract.customer')->find($invoice->invoiceable_id);
+        	$customerContract = CustomerContract::with(['customer', 'property', 'rooms', 'rooms.room', 'customer'])
     											->find($customerPaymentSchedule->customer_contract_id);
-
-    	if(!$invoice)
-    	{
-	        return response([
-	            'status' => 400,
-	            'statusText' => 'error',
-	            'message' => 'Not found',
-	            'ok' => true,
-	            'data' => $invoice,
-	        ], 400);
-    	}
-
-        return response([
-            'status' => 200,
-            'statusText' => 'success',
-            'message' => '',
-            'ok' => true,
-            'data' => [
-            	'invoice' => $invoice,
-            	'agent' => $agent,
-            	'customerPaymentSchedule' => $customerPaymentSchedule,
-            	'customerContract' => $customerContract,
-            ],
-        ], 200);
+            return response([
+                'status' => 200,
+                'statusText' => 'success',
+                'message' => '',
+                'ok' => true,
+                'data' => [
+                    'invoice' => $invoice,
+                    'agent' => $agent,
+                    'schedule' => $customerPaymentSchedule,
+                    'contract' => $customerContract,
+                    'invoiceable_type' => $invoice->invoiceable_type,
+                ],
+            ], 200);
+        }
     }
 }

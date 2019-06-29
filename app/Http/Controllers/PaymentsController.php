@@ -46,6 +46,14 @@ class PaymentsController extends Controller
 		        ], 400);    			
     		}
     		// Valid
+            if($customerPaymentSchedule->paid_at)
+            {
+                return response([
+                    'status' => 203,
+                    'statusDesc' => 'Payment reference number already paid',
+                    'data' => null,
+                ], 400);                
+            }
     		if($customerPaymentSchedule->expiry_date < Carbon::today())
     		{
 		        return response([
@@ -68,7 +76,7 @@ class PaymentsController extends Controller
     	if($chargeableTypeCode == 1)
     	{
     		// Client
-            $clientPaymentSchedule = ClientPaymentSchedule::whereControlNumber($controlNumber)->first();
+            $clientPaymentSchedule = ClientPaymentSchedule::with(['client', 'property'])->whereControlNumber($controlNumber)->first();
             if(!$clientPaymentSchedule)
             {
                 return response([
@@ -78,6 +86,14 @@ class PaymentsController extends Controller
                 ], 400);
             }
             // Valid
+            if($clientPaymentSchedule->paid_at)
+            {
+                return response([
+                    'status' => 203,
+                    'statusDesc' => 'Payment reference number already paid',
+                    'data' => null,
+                ], 400);                
+            }            
             if($clientPaymentSchedule->expiry_date < Carbon::today())
             {
                 return response([
@@ -91,7 +107,7 @@ class PaymentsController extends Controller
             $amount = $clientPaymentSchedule->amount_to_be_paid;
             $paymentReference = $clientPaymentSchedule->control_number;
             $paymentType = $accountCode;
-            $paymentDesc = 'Rent commision from '.$clientPaymentSchedule->start_date.' to '.$clientPaymentSchedule->end_date;           
+            $paymentDesc = 'Charge for '.$clientPaymentSchedule->property->name.' from '.$clientPaymentSchedule->start_date.' to '.$clientPaymentSchedule->end_date;     
     	}
 
         return response([
@@ -176,8 +192,9 @@ class PaymentsController extends Controller
     		$customerPaymentSchedule->paid_at = Carbon::now();
     		$customerPaymentSchedule->save();
 
-    		$invoice = $customerPaymentSchedule->invoices()->first();
+    		$invoice = $customerPaymentSchedule->invoices()->whereActive(true)->first();
     		$invoice->paid_at = Carbon::now();
+            $invoice->active = true;
     		$invoice->save();
 
             $paymentMode =  $customerPaymentSchedule->customerContract->property->propertyPaymentModes()->latest()->first()->paymentMode;
@@ -237,8 +254,9 @@ class PaymentsController extends Controller
             $clientPaymentSchedule->paid_at = Carbon::now();
             $clientPaymentSchedule->save();
 
-            $invoice = $clientPaymentSchedule->invoices()->first();
+            $invoice = $clientPaymentSchedule->invoices()->whereActive(true)->first();
             $invoice->paid_at = Carbon::now();
+            $invoice->active = true;
             $invoice->save();                      
     	}
 

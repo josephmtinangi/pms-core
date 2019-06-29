@@ -16,9 +16,10 @@ class CreateClientPaymentSchedulesTable extends Migration
         Schema::create('client_payment_schedules', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('client_id');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->date('expiry_date');
+            $table->unsignedInteger('property_id');
+            $table->timestamp('start_date');
+            $table->timestamp('end_date')->nullable();
+            $table->timestamp('expiry_date');
             $table->double('amount_to_be_paid');
             $table->string('currency')->default('TZS');
             $table->string('control_number')->unique();
@@ -27,6 +28,7 @@ class CreateClientPaymentSchedulesTable extends Migration
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients');
+            $table->foreign('property_id')->references('id')->on('properties');
         });
     }
 

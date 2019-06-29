@@ -37,7 +37,7 @@ class ControlNumbersController extends Controller
     	{
     		$customerPaymentSchedule->start_date = $lease->start_date;
     		$customerPaymentSchedule->end_date = $lease->start_date->addMonths($lease->payment_interval);
-    		$customerPaymentSchedule->expiry_date = $lease->start_date->addMonths($lease->payment_interval);
+    		$customerPaymentSchedule->expiry_date = $lease->start_date->addMonth();
     		$customerPaymentSchedule->amount_to_be_paid = $lease->rent_per_month * $lease->payment_interval;
     		$customerPaymentSchedule->active = true;
     	}
@@ -45,7 +45,7 @@ class ControlNumbersController extends Controller
     	{
     		$customerPaymentSchedule->start_date = $existingCustomerPaymentSchedule->end_date;
     		$customerPaymentSchedule->end_date = $existingCustomerPaymentSchedule->end_date->addMonths($lease->payment_interval);
-    		$customerPaymentSchedule->expiry_date = $existingCustomerPaymentSchedule->end_date->addMonths($lease->payment_interval);
+    		$customerPaymentSchedule->expiry_date = $existingCustomerPaymentSchedule->start_date->addMonth();
     		$customerPaymentSchedule->amount_to_be_paid = $lease->rent_per_month * $lease->payment_interval;
     		$customerPaymentSchedule->active = true;
 

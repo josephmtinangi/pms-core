@@ -15,4 +15,9 @@ class ClientPaymentSchedule extends Model
     {
     	return $this->belongsTo(Client::class);
     }
+
+    public function property()
+    {
+    	return $this->belongsTo(Property::class);
+    }
 }

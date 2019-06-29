@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
+use App\Models\Client;
+use App\Models\Invoice;
 use App\Models\Property;
 use App\Models\PaymentMode;
 use Illuminate\Http\Request;
 use App\Models\PropertyPaymentMode;
+use App\Models\ClientPaymentSchedule;
 use App\Http\Controllers\Controller;
 
 class PropertiesController extends Controller
@@ -73,11 +77,23 @@ class PropertiesController extends Controller
             ], 400);            
         }
 
+        $client = Client::find($request->client_id);
+
+        if(!$client)
+        {
+            return response([
+                'status' => 400,
+                'statusText' => 'Bad request',
+                'message' => 'Client not found',
+                'ok' => true,
+                'data' => $client,
+            ], 400);            
+        }        
+
         $property = new Property;
         $property->name = $request->name;
         $property->property_type_id = $request->property_type_id;
-        $property->commision = $request->commision;
-        $property->client_id = $request->client_id;
+        $property->client_id = $client->id;
         $property->physical_address = $request->physical_address;
         $property->floors = $request->floors;
         $property->village_id = $request->village_id;
@@ -88,6 +104,44 @@ class PropertiesController extends Controller
         $propertyPaymentMode->payment_mode_id = $paymentMode->id;
         $propertyPaymentMode->amount = $request->amount;
         $propertyPaymentMode->save();
+
+        // 01 - fixed amount per property
+        if($paymentMode->code == '01')
+        {
+            $clientPaymentSchedule = new ClientPaymentSchedule;
+            $clientPaymentSchedule->start_date = Carbon::now();
+            $clientPaymentSchedule->end_date = Carbon::now()->addMonth();
+            $clientPaymentSchedule->client_id = $client->id;
+            $clientPaymentSchedule->property_id = $property->id;
+            $clientPaymentSchedule->expiry_date = Carbon::now()->addMonth();
+            $clientPaymentSchedule->amount_to_be_paid = $request->amount;
+
+            $initial = config()->get('pms.control_number.initial');
+            $accountCode = $client->accounts->first()->code;
+            $chargeableCode = config()->get('pms.control_number.client');;
+            $clientCode = $client->code;
+            $clientRandom = sprintf('%06d', rand(1, 99999));
+
+            $control_number = $initial.''.$accountCode.''.$chargeableCode.''.$clientCode.''.$clientRandom;
+
+            $clientPaymentSchedule->control_number = $control_number;
+
+            $clientPaymentSchedule->save();
+
+            // Generate invoice
+            $invoice = new Invoice;
+
+            if(!Invoice::latest()->first())
+            {
+                $invoice->number = sprintf('%06d', 1);
+            }
+            else
+            {
+                $invoice->number = sprintf('%06d', ((int)Invoice::latest()->first()->number) + 1);
+            }        
+
+            $clientPaymentSchedule->invoices()->save($invoice);            
+        }
 
         return response([
             'status' => 200,
