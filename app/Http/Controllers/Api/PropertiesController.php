@@ -109,8 +109,9 @@ class PropertiesController extends Controller
         if($paymentMode->code == '01')
         {
             $clientPaymentSchedule = new ClientPaymentSchedule;
-            $clientPaymentSchedule->start_date = Carbon::now();
-            $clientPaymentSchedule->end_date = Carbon::now()->addMonth();
+            $clientPaymentSchedule->start_date = $request->start_date;
+            $clientPaymentSchedule->expiry_date = $request->start_date->addMonth();
+            $clientPaymentSchedule->end_date = $request->end_date;
             $clientPaymentSchedule->client_id = $client->id;
             $clientPaymentSchedule->property_id = $property->id;
             $clientPaymentSchedule->expiry_date = Carbon::now()->addMonth();

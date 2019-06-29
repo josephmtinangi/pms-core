@@ -18,7 +18,7 @@ class CreateClientPaymentSchedulesTable extends Migration
             $table->unsignedInteger('client_id');
             $table->unsignedInteger('property_id');
             $table->timestamp('start_date');
-            $table->timestamp('end_date')->nullable();
+            $table->timestamp('end_date');
             $table->timestamp('expiry_date');
             $table->double('amount_to_be_paid');
             $table->string('currency')->default('TZS');
