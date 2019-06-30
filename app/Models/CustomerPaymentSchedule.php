@@ -21,4 +21,9 @@ class CustomerPaymentSchedule extends Model
     {
     	return $this->belongsTo(CustomerContract::class);
     }
+
+    public function customerPayment()
+    {
+        return $this->hasOne(CustomerPayment::class);
+    }
 }

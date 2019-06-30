@@ -26,4 +26,9 @@ class ClientPaymentSchedule extends Model
     {
     	return $this->belongsTo(Property::class);
     }
+
+    public function clientPayment()
+    {
+        return $this->hasOne(ClientPayment::class);
+    }
 }
