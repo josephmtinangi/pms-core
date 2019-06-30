@@ -29,6 +29,7 @@ class CreateClientsTable extends Migration
             $table->string('physical_address')->nullable();
             $table->string('postal_address')->nullable();
             $table->string('tin')->unique()->nullable();
+            $table->timestamp('admin_at')->default(null;
             $table->timestamps();
 
             $table->foreign('client_type_id')->references('id')->on('client_types');

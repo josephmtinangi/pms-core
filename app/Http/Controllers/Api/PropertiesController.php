@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use App\Models\Property;
 use App\Models\PaymentMode;
 use Illuminate\Http\Request;
+use App\Models\ClientProperty;
 use App\Models\PropertyPaymentMode;
 use App\Models\ClientPaymentSchedule;
 use App\Http\Controllers\Controller;
@@ -88,7 +89,10 @@ class PropertiesController extends Controller
                 'ok' => true,
                 'data' => $client,
             ], 400);            
-        }        
+        }   
+
+        $client->admin_at = Carbon::now();
+        $client->save();     
 
         $property = new Property;
         $property->name = $request->name;
@@ -100,6 +104,13 @@ class PropertiesController extends Controller
         $property->village_id = $request->village_id;
         $property->save();
 
+        // Attach
+        $clientProperty = new ClientProperty;
+        $clientProperty->client_id = $client->id;
+        $clientProperty->property_id = $property->id;
+        $clientProperty->save();
+
+        // Payment mode
         $propertyPaymentMode = new PropertyPaymentMode;
         $propertyPaymentMode->property_id = $property->id;
         $propertyPaymentMode->payment_mode_id = $paymentMode->id;
@@ -113,7 +124,7 @@ class PropertiesController extends Controller
         {
             $clientPaymentSchedule = new ClientPaymentSchedule;
             $clientPaymentSchedule->start_date = $request->start_date;
-            $clientPaymentSchedule->expiry_date = $request->start_date->addMonth();
+            $clientPaymentSchedule->expiry_date = Carbon::parse($request->start_date)->addMonth();
             $clientPaymentSchedule->end_date = $request->end_date;
             $clientPaymentSchedule->client_id = $client->id;
             $clientPaymentSchedule->property_id = $property->id;
