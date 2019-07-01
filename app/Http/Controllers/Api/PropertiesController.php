@@ -131,13 +131,25 @@ class PropertiesController extends Controller
             $clientPaymentSchedule->expiry_date = Carbon::now()->addMonth();
             $clientPaymentSchedule->amount_to_be_paid = $request->amount;
 
-            $initial = config()->get('pms.control_number.initial');
-            $accountCode = $client->accounts->first()->code;
-            $chargeableCode = config()->get('pms.control_number.client');;
-            $clientCode = $client->code;
-            $clientRandom = sprintf('%06d', rand(1, 99999));
+            $control_number = null;
+            $unique = false;
+            do {
 
-            $control_number = $initial.''.$accountCode.''.$chargeableCode.''.$clientCode.''.$clientRandom;
+                $number = Helper::generateClientControlNumber($client);
+
+                try {
+
+                    $paymentReference = new PaymentReference;
+                    $paymentReference->number = $number;
+                    $paymentReference->save();
+
+                    $control_number = $paymentReference->number;
+
+                    $unique = true;
+                }catch(Exception $e){
+                    $unique = false;
+                }
+            }while(!$unique);
 
             $clientPaymentSchedule->control_number = $control_number;
 

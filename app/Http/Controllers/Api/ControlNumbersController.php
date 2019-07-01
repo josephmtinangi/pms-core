@@ -53,13 +53,25 @@ class ControlNumbersController extends Controller
     		$existingCustomerPaymentSchedule->save();
     	}
 
-    	$initial = config()->get('pms.control_number.initial');
-    	$accountCode = $lease->property->client->accounts->first()->code;
-    	$chargeableCode = 0;
-    	$customerCode = $lease->customer->code;
-    	$customerRandom = sprintf('%06d', rand(1, 99999));
+        $control_number = null;
+        $unique = false;
+        do {
 
-    	$control_number = $initial.''.$accountCode.''.$chargeableCode.''.$customerCode.''.$customerRandom;
+            $number = Helper::generateCustomerControlNumber($lease);
+
+            try {
+
+                $paymentReference = new PaymentReference;
+                $paymentReference->number = $number;
+                $paymentReference->save();
+
+                $control_number = $paymentReference->number;
+
+                $unique = true;
+            }catch(Exception $e){
+                $unique = false;
+            }
+        }while(!$unique);
 
 		$customerPaymentSchedule->control_number = $control_number;
 
