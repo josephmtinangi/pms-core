@@ -6,9 +6,11 @@ use Carbon\Carbon;
 use App\Models\Client;
 use App\Models\Invoice;
 use App\Models\Property;
+use App\Utilities\Helper;
 use App\Models\PaymentMode;
 use Illuminate\Http\Request;
 use App\Models\ClientProperty;
+use App\Models\PaymentReference;
 use App\Models\PropertyPaymentMode;
 use App\Models\ClientPaymentSchedule;
 use App\Http\Controllers\Controller;
@@ -158,13 +160,13 @@ class PropertiesController extends Controller
             // Generate invoice
             $invoice = new Invoice;
 
-            if(!Invoice::latest()->first())
+            if(!Invoice::wherePropertyId($property->id)->latest()->first())
             {
                 $invoice->number = sprintf('%06d', 1);
             }
             else
             {
-                $invoice->number = sprintf('%06d', ((int)Invoice::latest()->first()->number) + 1);
+                $invoice->number = sprintf('%06d', ((int)Invoice::wherePropertyId($property->id)->latest()->first()->number) + 1);
             }        
 
             $clientPaymentSchedule->invoices()->save($invoice);            

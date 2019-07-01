@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Invoice;
+use App\Utilities\Helper;
 use Illuminate\Http\Request;
 use App\Models\CustomerContract;
+use App\Models\PaymentReference;
 use App\Http\Controllers\Controller;
 use App\Models\CustomerPaymentSchedule;
 
@@ -27,7 +29,7 @@ class ControlNumbersController extends Controller
 
     public function store(Request $request)
     {
-    	$lease = CustomerContract::find($request->customer_contract_id);
+    	$lease = CustomerContract::with('property')->find($request->customer_contract_id);
 
     	$existingCustomerPaymentSchedule = CustomerPaymentSchedule::whereCustomerContractId($lease->id)->whereActive(true)->first();
 
@@ -79,14 +81,14 @@ class ControlNumbersController extends Controller
 
         // Generate invoice
         $invoice = new Invoice;
-
-        if(!Invoice::latest()->first())
+        $invoice->property_id = $lease->property->id;
+        if(!Invoice::wherePropertyId($lease->property->id)->latest()->first())
         {
             $invoice->number = sprintf('%06d', 1);
         }
         else
         {
-            $invoice->number = sprintf('%06d', ((int)Invoice::latest()->first()->number) + 1);
+            $invoice->number = sprintf('%06d', ((int)Invoice::wherePropertyId($lease->property->id)->latest()->first()->number) + 1);
         }        
 
         $customerPaymentSchedule->invoices()->save($invoice);        

@@ -8,7 +8,7 @@ use App\Models\Customer;
 use App\Models\CustomerContract;
 class Helper
 {
-	public static function createResponse($status, $statusText, $message, $ok, $data);
+	public static function createResponse($status, $statusText, $message, $ok, $data)
 	{
         return response([
             'status' => $status,
