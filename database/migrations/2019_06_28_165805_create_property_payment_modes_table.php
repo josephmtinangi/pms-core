@@ -18,8 +18,8 @@ class CreatePropertyPaymentModesTable extends Migration
             $table->unsignedInteger('property_id');
             $table->unsignedInteger('payment_mode_id');
             $table->double('amount')->nullable()->default(0);
-            $table->timestamp('start_date')->default(null);
-            $table->timestamp('end_date')->default(null);
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
             $table->timestamps();
 
             $table->foreign('property_id')->references('id')->on('properties');

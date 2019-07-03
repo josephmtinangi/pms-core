@@ -4,6 +4,7 @@ namespace App\Utilities;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Client;
 use App\Models\Customer;
 use App\Models\CustomerContract;
 class Helper

@@ -160,6 +160,7 @@ class PropertiesController extends Controller
             // Generate invoice
             $invoice = new Invoice;
 
+            $invoice->property_id = $property->id;
             if(!Invoice::wherePropertyId($property->id)->latest()->first())
             {
                 $invoice->number = sprintf('%06d', 1);
