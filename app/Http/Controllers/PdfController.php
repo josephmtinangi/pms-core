@@ -41,17 +41,17 @@ class PdfController extends Controller
      */
     public function show(Invoice $invoice)
     {
+        $agent = RealEstateAgent::latest()->first();
         if($invoice->invoiceable_type == get_class(new ClientPaymentSchedule))
         {
-            //
+            return $clientPaymentSchedule = ClientPaymentSchedule::with('client')->find($invoice->invoiceable_id);
         }
         if($invoice->invoiceable_type == get_class(new CustomerPaymentSchedule)){        
-            $agent = RealEstateAgent::latest()->first();
             $customerPaymentSchedule = CustomerPaymentSchedule::find($invoice->invoiceable_id);
             $customerContract = CustomerContract::with(['customer', 'property', 'rooms', 'rooms.room', 'customer'])
                                                     ->find($customerPaymentSchedule->customer_contract_id); 
 
-            return response($this->pdf->generate($invoice, $agent, $customerPaymentSchedule, $customerContract), 200)->withHeaders([
+            return response($this->pdf->generateCustomerInvoice($invoice, $agent, $customerPaymentSchedule, $customerContract), 200)->withHeaders([
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => "{$this->pdf->action()}; filename=INVOICE-{$invoice->number}.pdf",
             ]);
@@ -60,22 +60,23 @@ class PdfController extends Controller
 
     public function save(Invoice $invoice)
     {
-        $filepath = 'invoices/INVOICE-'.$invoice->number.'.pdf';
         
+        $agent = RealEstateAgent::latest()->first();
         if($invoice->invoiceable_type == get_class(new ClientPaymentSchedule))
         {
+            $filepath = 'invoices/clients/INVOICE-'.$invoice->number.'.pdf';
             //
         }
         if($invoice->invoiceable_type == get_class(new CustomerPaymentSchedule)){
             
-            $agent = RealEstateAgent::latest()->first();
             $customerPaymentSchedule = CustomerPaymentSchedule::find($invoice->invoiceable_id);
             $customerContract = CustomerContract::with(['customer', 'property', 'rooms', 'rooms.room', 'customer'])
                                                     ->find($customerPaymentSchedule->customer_contract_id);
+            $filepath = 'invoices/customers/'.$customerContract->customer->id.'/INVOICE-'.$invoice->number.'.pdf';
 
             if(!$invoice->path)
             {
-                Storage::disk('public')->put($filepath, $this->pdf->generate($invoice, $agent, $customerPaymentSchedule, $customerContract));
+                Storage::disk('public')->put($filepath, $this->pdf->generateCustomerInvoice($invoice, $agent, $customerPaymentSchedule, $customerContract));
             }
 
             $invoice->path = $filepath;

@@ -39,14 +39,31 @@ class Pdf extends Dompdf
      * @param  \App\Invoice  $invoice
      * @return string
      */
-    public function generate(Invoice $invoice, RealEstateAgent $agent, CustomerPaymentSchedule $customerPaymentSchedule, CustomerContract $customerContract)
+    public function generateCustomerInvoice(Invoice $invoice, RealEstateAgent $agent, CustomerPaymentSchedule $customerPaymentSchedule, CustomerContract $customerContract)
     {
         $this->loadHtml(
-            View::make('invoice', compact(['agent','invoice', 'customerPaymentSchedule','customerContract']))->render()
+            View::make('invoices/customer', compact(['agent','invoice', 'customerPaymentSchedule','customerContract']))->render()
         );
 
         $this->render();
 
         return $this->output();
     }
+
+    /**
+     * Render the PDF.
+     *
+     * @param  \App\Invoice  $invoice
+     * @return string
+     */
+    public function generateClientInvoice(Invoice $invoice, RealEstateAgent $agent, ClientPaymentSchedule $clientPaymentSchedule, ClientContract $clientContract)
+    {
+        $this->loadHtml(
+            View::make('invoices/client', compact(['agent','invoice', 'clientPaymentSchedule','clientContract']))->render()
+        );
+
+        $this->render();
+
+        return $this->output();
+    }    
 }

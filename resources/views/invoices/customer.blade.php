@@ -9,7 +9,7 @@
 	<table>
 		<tr>
 			<td>
-				<img src="{{ asset('attachments/default/logo.png') }}" alt="">
+				<img src="http://localhost:8001/img/logo.png" alt="">
 			</td>
 			<td>
 				{{ $agent->name }}<br>
