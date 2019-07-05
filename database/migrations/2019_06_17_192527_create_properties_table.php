@@ -22,6 +22,7 @@ class CreatePropertiesTable extends Migration
             $table->string('physical_address');
             $table->integer('floors')->default(0);
             $table->unsignedInteger('village_id');
+            $table->timestamp('rented_at')->nullable();
             $table->timestamps();
 
             $table->foreign('property_type_id')->references('id')->on('property_types');
