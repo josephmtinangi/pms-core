@@ -16,6 +16,11 @@ class Customer extends Model
     	return $this->hasMany(CustomerContract::class);
     }
 
+    public function schedules()
+    {
+        return $this->customerContracts()->with(['controlNumbers.billType']);
+    }
+
     public function name()
     {
     	return $this->first_name.' '.$this->middle_name.' '.$this->last_name;

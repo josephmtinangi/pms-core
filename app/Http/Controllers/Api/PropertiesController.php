@@ -190,7 +190,9 @@ class PropertiesController extends Controller
      */
     public function show($id)
     {
-        $property = Property::with(['propertyPaymentMode','client', 'client.clientType', 'propertyType', 'rooms'])->find($id);
+        $property = Property::with(['propertyPaymentMode','client', 'client.clientType', 'propertyType'])->with(['rooms' => function ($query) {
+            $query->orderBy('floor', 'desc');
+        }])->find($id);
 
         if(!$property)
         {

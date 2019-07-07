@@ -16,6 +16,7 @@ class CreateCustomerPaymentSchedulesTable extends Migration
         Schema::create('customer_payment_schedules', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('customer_contract_id');
+            $table->unsignedInteger('bill_type_id');
             $table->date('start_date');
             $table->date('end_date');
             $table->date('expiry_date');
@@ -26,6 +27,7 @@ class CreateCustomerPaymentSchedulesTable extends Migration
             $table->timestamps();
 
             $table->foreign('customer_contract_id')->references('id')->on('customer_contracts');
+            $table->foreign('bill_type_id')->references('id')->on('bill_types');
         });
     }
 

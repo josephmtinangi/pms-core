@@ -39,6 +39,8 @@ Route::group(['middleware' => 'jwt.auth'], function(){
    
    Route::resource('payment-modes', 'Api\PaymentModesController');
    
+   Route::resource('bill-types', 'Api\BillTypesController');
+   
    Route::resource('regions', 'Api\RegionsController');
    Route::get('regions/{region}/districts', 'Api\RegionsController@districts');
    Route::resource('districts', 'Api\DistrictsController');
@@ -55,6 +57,8 @@ Route::group(['middleware' => 'jwt.auth'], function(){
    Route::get('properties/all', 'Api\PropertiesController@all');
    Route::get('properties/{property}/rooms', 'Api\PropertiesController@rooms');
    Route::resource('properties', 'Api\PropertiesController');
+   
+   Route::get('properties/{property}/floor/{properties}', 'Api\PropertyFloorController@show');
    
    Route::resource('customer-types', 'Api\CustomerTypesController');
    Route::get('customers/all', 'Api\CustomersController@all');

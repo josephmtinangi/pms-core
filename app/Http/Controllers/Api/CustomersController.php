@@ -95,7 +95,7 @@ class CustomersController extends Controller
      */
     public function show($id)
     {
-        $customer = Customer::with(['customerType', 'customerContracts'])->find($id);
+        $customer = Customer::with(['customerType', 'customerContracts', 'schedules'])->find($id);
 
         if(!$customer)
         {
@@ -103,7 +103,7 @@ class CustomersController extends Controller
                 'status' => 400,
                 'statusText' => 'Bad request',
                 'message' => 'Not found',
-                'ok' => true,
+                'ok' => false,
                 'data' => $customer,
             ], 400);            
         }

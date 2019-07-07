@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Invoice;
+use App\Models\BillType;
+use App\Models\Customer;
 use App\Utilities\Helper;
 use Illuminate\Http\Request;
 use App\Models\CustomerContract;
@@ -29,26 +31,58 @@ class ControlNumbersController extends Controller
 
     public function store(Request $request)
     {
-    	$lease = CustomerContract::with('property')->find($request->customer_contract_id);
 
-    	$existingCustomerPaymentSchedule = CustomerPaymentSchedule::whereCustomerContractId($lease->id)->whereActive(true)->first();
+        $customer = Customer::find($request->customer_id);
+
+        if(!$customer)
+        {
+            return response([
+                'status' => 200,
+                'statusText' => 'Bad request',
+                'message' => 'Customer not found',
+                'ok' => false,
+                'data' => null,
+            ], 200); 
+        }
+
+    	$lease = CustomerContract::with('property')->whereCustomerId($customer->id)->whereActive(true)->first();
+
+        if(!$lease)
+        {
+            return response([
+                'status' => 400,
+                'statusText' => 'Bad request',
+                'message' => 'Lease not found',
+                'ok' => false,
+                'data' => null,
+            ], 400); 
+        }        
+
+        $billType = BillType::first();
+        if($request->bill_type_id)
+        {
+            $bt = BillType::find($request->bill_type_id);
+            if($bt)
+            {
+                $billType = $bt;
+            }
+        }
+
+    	$existingCustomerPaymentSchedule = CustomerPaymentSchedule::whereBillTypeId($billType->id)->whereCustomerContractId($lease->id)->whereActive(true)->first();
 
     	$customerPaymentSchedule = new CustomerPaymentSchedule;
-    	$customerPaymentSchedule->customer_contract_id = $lease->id;
+    	$customerPaymentSchedule->bill_type_id = $billType->id;
+        $customerPaymentSchedule->customer_contract_id = $lease->id;
+		$customerPaymentSchedule->start_date = Carbon::parse($request->start_date);
+		$customerPaymentSchedule->end_date = Carbon::parse($request->end_date);
+		$customerPaymentSchedule->expiry_date = Carbon::parse($request->start_date)->addDays(7);
+		$customerPaymentSchedule->amount_to_be_paid = $request->amount;
     	if(!$existingCustomerPaymentSchedule)
     	{
-    		$customerPaymentSchedule->start_date = $lease->start_date;
-    		$customerPaymentSchedule->end_date = $lease->start_date->addMonths($lease->payment_interval);
-    		$customerPaymentSchedule->expiry_date = $lease->start_date->addMonth();
-    		$customerPaymentSchedule->amount_to_be_paid = $lease->rent_per_month * $lease->payment_interval;
     		$customerPaymentSchedule->active = true;
     	}
     	else
     	{
-    		$customerPaymentSchedule->start_date = $existingCustomerPaymentSchedule->end_date;
-    		$customerPaymentSchedule->end_date = $existingCustomerPaymentSchedule->end_date->addMonths($lease->payment_interval);
-    		$customerPaymentSchedule->expiry_date = $existingCustomerPaymentSchedule->start_date->addMonth();
-    		$customerPaymentSchedule->amount_to_be_paid = $lease->rent_per_month * $lease->payment_interval;
     		$customerPaymentSchedule->active = true;
 
     		$existingCustomerPaymentSchedule->active = false;

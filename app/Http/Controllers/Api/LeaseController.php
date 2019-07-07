@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Room;
+use App\Models\BillType;
 use App\Models\Customer;
 use App\Models\Property;
 use Illuminate\Http\Request;
@@ -61,7 +62,7 @@ class LeaseController extends Controller
 	            'status' => 400,
 	            'statusText' => 'error',
 	            'message' => 'Customer not found',
-	            'ok' => true,
+	            'ok' => false,
 	            'data' => null,
 	        ], 400);			
 		}    	
@@ -73,10 +74,12 @@ class LeaseController extends Controller
 	            'status' => 400,
 	            'statusText' => 'error',
 	            'message' => 'Property not found',
-	            'ok' => true,
+	            'ok' => false,
 	            'data' => null,
 	        ], 400);			
 		}  	
+
+        $billType = BillType::first();
     	
         $start_date = Carbon::parse($request->start_date);
         $end_date = Carbon::parse($request->end_date);
@@ -94,20 +97,27 @@ class LeaseController extends Controller
     	$customerContract->contract_duration = $request->contract_duration;
     	$customerContract->save();
 
-    	foreach ($request->rooms as $key => $value) {
-    		
-            $room = Room::wherePropertyId($property->id)->whereStatus('active')->find($value);
+        if(sizeof($request->rooms)> 0){
+        	foreach ($request->rooms as $key => $value) {
+        		
+                $room = Room::wherePropertyId($property->id)->whereStatus('active')->find($value);
 
-    		if($room){
-                $customerContractRoom = new CustomerContractRoom;
-                $customerContractRoom->customer_contract_id = $customerContract->id;
-                $customerContractRoom->room_id = $room->id;
-                $customerContractRoom->save();  
-                
-                $room->status = 'rented';
-                $room->save();
-	    	}
-    	}
+        		if($room){
+                    $customerContractRoom = new CustomerContractRoom;
+                    $customerContractRoom->customer_contract_id = $customerContract->id;
+                    $customerContractRoom->room_id = $room->id;
+                    $customerContractRoom->save();  
+                    
+                    $room->status = 'rented';
+                    $room->save();
+    	    	}
+        	}
+        }
+        else
+        {
+            $property->rented_at = Carbon::now();
+            $property->save();
+        }
 
         return response([
             'status' => 200,

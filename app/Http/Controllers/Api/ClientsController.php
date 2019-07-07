@@ -126,7 +126,7 @@ class ClientsController extends Controller
                 'status' => 400,
                 'statusText' => 'error',
                 'message' => 'not found',
-                'ok' => true,
+                'ok' => false,
                 'data' => $client,
             ], 400);             
         }
@@ -171,6 +171,28 @@ class ClientsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $client = Client::find($id);
+
+        if(!$client)
+        {
+            return response([
+                'status' => 400,
+                'statusText' => 'error',
+                'message' => 'not found',
+                'ok' => false,
+                'data' => $client,
+            ], 400);             
+        }
+
+        $client->delete();
+
+        return response([
+            'status' => 200,
+            'statusText' => 'success',
+            'message' => '',
+            'ok' => true,
+            'data' => null,
+        ], 200);
+    
     }
 }

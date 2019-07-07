@@ -67,11 +67,8 @@ class PaymentsController extends Controller
     		$amount = $customerPaymentSchedule->amount_to_be_paid;
     		$paymentReference = $customerPaymentSchedule->control_number;
     		$paymentType = $accountCode;
-    		$paymentDesc = 'Rent from '.$customerPaymentSchedule->start_date.' to '.$customerPaymentSchedule->end_date. ' for room(s) ';
-    		foreach($customerPaymentSchedule->customerContract->rooms as $room)
-    		{
-    			$paymentDesc .= $room->room->number.', ';
-    		}
+    		$paymentDesc = $customerPaymentSchedule->billType->name.' from '.$customerPaymentSchedule->start_date->format('M d, Y').' to '.$customerPaymentSchedule->end_date->format('M d, Y');
+
     	}
     	if($chargeableTypeCode == 1)
     	{
@@ -107,7 +104,7 @@ class PaymentsController extends Controller
             $amount = $clientPaymentSchedule->amount_to_be_paid;
             $paymentReference = $clientPaymentSchedule->control_number;
             $paymentType = $accountCode;
-            $paymentDesc = 'Charge for '.$clientPaymentSchedule->property->name.' from '.$clientPaymentSchedule->start_date.' to '.$clientPaymentSchedule->end_date;     
+            $paymentDesc = 'Charge for '.$clientPaymentSchedule->property->name.' from '.$clientPaymentSchedule->start_date->format('M d, Y').' to '.$clientPaymentSchedule->end_date->format('M d, Y');     
     	}
 
         return response([
